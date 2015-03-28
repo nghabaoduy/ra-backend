@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use App\FileAsset;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -15,20 +16,38 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var string
 	 */
-	protected $table = 'users';
+	protected $table = 'user';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'object_id',
+        'first_name',
+        'last_name',
+        'phone',
+        'user_type',
+        'agent_phone',
+        'phone',
+        'profile_image_id'
+    ];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['password', 'remember_token'];
+	protected $hidden = ['password'];
+
+    public function profileImage() {
+        return $this->belongsTo('App\FileAsset', "profile_image_id");
+    }
+
+
 
 }
