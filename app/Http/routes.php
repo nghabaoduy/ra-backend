@@ -21,3 +21,4 @@ Route::controllers([
 ]);
 
 $router->resource('user', 'UserController');
+$router->resource('property', 'PropertyController');
