@@ -58,6 +58,12 @@ class PropertyController extends Controller {
         }
 
         //Floor size min max
+        if ($request->has('area_min') && $request->get('area_min') != "" && $request->has('area_max') && $request->get('area_max') != "")  {
+            $query->whereBetween('area', [$request->get('area_min'), $request->get('area_max')]);
+        } else  if ($request->has('area_min') && $request->get('area_min') != "") {
+            $query->where('area','>=', $request->get('area_min'));
+        } else  if ($request->has('area_max') && $request->get('area_max') != "") {
+            $query->where('area','<=', $request->get('area_max'));
         }
 
         //Price min max
