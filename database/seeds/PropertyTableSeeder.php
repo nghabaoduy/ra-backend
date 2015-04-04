@@ -103,6 +103,7 @@ class PropertyTableSeeder extends Seeder {
                 'property_type'=> array_key_exists('propertyType', $propertyData) ? $propertyData['propertyType'] : NULL,
                 'psf'=> array_key_exists('psf', $propertyData) ? $propertyData['psf'] : NULL,
                 'rental_yield'=> array_key_exists('rentalYield', $propertyData) ? $propertyData['rentalYield'] : NULL,
+                'retail_Type'=> array_key_exists('retailType', $propertyData) ? $propertyData['retailType'] : NULL,
                 'rented_price'=> array_key_exists('rentedPrice', $propertyData) ? $propertyData['rentedPrice'] : NULL,
                 'roof_terrance'=> array_key_exists('roofTerrance', $propertyData) ? $propertyData['roofTerrance'] : NULL,
                 'room_position'=> array_key_exists('roomPosition', $propertyData) ? $propertyData['roomPosition'] : NULL,

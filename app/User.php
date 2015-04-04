@@ -38,7 +38,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'phone',
         'profile_image_id'
     ];
-    
+
     protected $searchable = [
         'columns' => [
             'user_type' => 10,

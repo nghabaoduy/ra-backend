@@ -39,6 +39,7 @@ class UserTableSeeder extends Seeder  {
 
             $newUserData = [
                 'username' => $userData['username'],
+                'password' => $userData['bcryptPassword'],
                 'agent_phone' => array_key_exists('agentPhone', $userData) ? $userData['agentPhone']: NULL,
                 'email' =>  array_key_exists('email', $userData) ? $userData['email'] : NULL,
                 'first_name' => array_key_exists('firstName', $userData) ? $userData['firstName'] : NULL,

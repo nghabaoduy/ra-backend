@@ -3,6 +3,9 @@
 .env
 
 
+/public/Data/*
+
+
 ### Laravel ###
 /bootstrap/compiled.php
 .env.*.php

@@ -82,4 +82,8 @@ class Property extends Model {
     public function agent() {
         return $this->belongsTo('App\User', 'agent_id');
     }
+
+    public function propertyImages() {
+        return $this->belongsToMany('App\FileAsset','property_image', 'property_id', 'file_id');
+    }
 }
