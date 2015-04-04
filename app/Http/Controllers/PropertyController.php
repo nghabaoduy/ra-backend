@@ -58,12 +58,6 @@ class PropertyController extends Controller {
         }
 
         //Floor size min max
-        if ($request->has('floor_load_min') && $request->get('floor_load_min') != "" && $request->has('floor_load_max') && $request->get('floor_load_max') != "")  {
-            $query->whereBetween('floor_load', [$request->get('floor_load_min'), $request->get('floor_load_max')]);
-        } else  if ($request->has('floor_load_min') && $request->get('floor_load_min') != "") {
-            $query->where('floor_load','>=', $request->get('floor_load_min'));
-        } else  if ($request->has('floor_load_max') && $request->get('floor_load_max') != "") {
-            $query->where('floor_load','<=', $request->get('floor_load_max'));
         }
 
         //Price min max
