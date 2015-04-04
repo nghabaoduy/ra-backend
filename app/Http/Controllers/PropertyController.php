@@ -56,22 +56,22 @@ class PropertyController extends Controller {
         if ($request->has('district') && $request->get('district') != "") {
             $query->where('district', $request->get('district'));
         }
-
+s
         //Floor size min max
-        if ($request->has('area_min') && $request->get('area_min') != "" && $request->has('area_max') && $request->get('area_max') != "")  {
+        if ($request->has('area_min') && $request->get('area_min') != "-1" && $request->has('area_max') && $request->get('area_max') != "-1")  {
             $query->whereBetween('area', [$request->get('area_min'), $request->get('area_max')]);
-        } else  if ($request->has('area_min') && $request->get('area_min') != "") {
+        } else  if ($request->has('area_min') && $request->get('area_min') != "-1") {
             $query->where('area','>=', $request->get('area_min'));
-        } else  if ($request->has('area_max') && $request->get('area_max') != "") {
+        } else  if ($request->has('area_max') && $request->get('area_max') != "-1") {
             $query->where('area','<=', $request->get('area_max'));
         }
 
         //Price min max
-        if ($request->has('price_min') && $request->get('price_min') != "" && $request->has('price_max') && $request->get('price_max') != "")  {
+        if ($request->has('price_min') && $request->get('price_min') != "-1" && $request->has('price_max') && $request->get('price_max') != "-1")  {
             $query->whereBetween('price', [$request->get('price_min'), $request->get('price_max')]);
-        } else  if ($request->has('price_min') && $request->get('price_min') != "") {
+        } else  if ($request->has('price_min') && $request->get('price_min') != "-1") {
             $query->where('price','>=', $request->get('price_min'));
-        } else  if ($request->has('price_max') && $request->get('price_max') != "") {
+        } else  if ($request->has('price_max') && $request->get('price_max') != "-1") {
             $query->where('price','<=', $request->get('price_max'));
         }
 
@@ -81,38 +81,38 @@ class PropertyController extends Controller {
         }
 
         //Land size min max
-        if ($request->has('land_size_min') && $request->get('land_size_min') != "" && $request->has('land_size_max') && $request->get('land_size_max') != "")  {
+        if ($request->has('land_size_min') && $request->get('land_size_min') != "-1" && $request->has('land_size_max') && $request->get('land_size_max') != "-1")  {
             $query->whereBetween('land_size', [$request->get('land_size_min'), $request->get('land_size_max')]);
-        } else  if ($request->has('land_size_min') && $request->get('land_size_min') != "") {
+        } else  if ($request->has('land_size_min') && $request->get('land_size_min') != "-1") {
             $query->where('land_size','>=', $request->get('land_size_min'));
-        } else  if ($request->has('land_size_max') && $request->get('land_size_max') != "") {
+        } else  if ($request->has('land_size_max') && $request->get('land_size_max') != "-1") {
             $query->where('land_size','<=', $request->get('land_size_max'));
         }
 
         //PSF min max
-        if ($request->has('psf_min') && $request->get('psf_min') != "" && $request->has('psf_max') && $request->get('psf_max') != "")  {
+        if ($request->has('psf_min') && $request->get('psf_min') != "-1" && $request->has('psf_max') && $request->get('psf_max') != "-1")  {
             $query->whereBetween('psf', [$request->get('psf_min'), $request->get('psf_max')]);
-        } else  if ($request->has('psf_min') && $request->get('psf_min') != "") {
+        } else  if ($request->has('psf_min') && $request->get('psf_min') != "-1") {
             $query->where('psf','>=', $request->get('psf_min'));
-        } else  if ($request->has('psf_max') && $request->get('psf_max') != "") {
+        } else  if ($request->has('psf_max') && $request->get('psf_max') != "-1") {
             $query->where('psf','<=', $request->get('psf_max'));
         }
 
         //Top year min max
-        if ($request->has('top_year_min') && $request->get('top_year_min') != "" && $request->has('top_year_max') && $request->get('top_year_max') != "")  {
+        if ($request->has('top_year_min') && $request->get('top_year_min') != "-1" && $request->has('top_year_max') && $request->get('top_year_max') != "-1")  {
             $query->whereBetween('top_year', [$request->get('top_year_min'), $request->get('top_year_max')]);
-        } else  if ($request->has('top_year_min') && $request->get('top_year_min') != "") {
+        } else  if ($request->has('top_year_min') && $request->get('top_year_min') != "-1") {
             $query->where('top_year','>=', $request->get('top_year_min'));
-        } else  if ($request->has('top_year_max') && $request->get('top_year_max') != "") {
+        } else  if ($request->has('top_year_max') && $request->get('top_year_max') != "-1") {
             $query->where('top_year','<=', $request->get('top_year_max'));
         }
 
         //Bed room min max
-        if ($request->has('bedroom_min') && $request->get('bedroom_min') != "" && $request->has('bedroom_max') && $request->get('bedroom_max') != "")  {
+        if ($request->has('bedroom_min') && $request->get('bedroom_min') != "-1" && $request->has('bedroom_max') && $request->get('bedroom_max') != "-1")  {
             $query->whereBetween('bedroom', [$request->get('bedroom_min'), $request->get('bedroom_max')]);
-        } else  if ($request->has('bedroom_min') && $request->get('bedroom_min') != "") {
+        } else  if ($request->has('bedroom_min') && $request->get('bedroom_min') != "-1") {
             $query->where('bedroom','>=', $request->get('bedroom_min'));
-        } else  if ($request->has('bedroom_max') && $request->get('bedroom_max') != "") {
+        } else  if ($request->has('bedroom_max') && $request->get('bedroom_max') != "-1") {
             $query->where('bedroom','<=', $request->get('bedroom_max'));
         }
 
@@ -127,31 +127,31 @@ class PropertyController extends Controller {
         }
 
         //Rented price min max
-        if ($request->has('rented_price_min') && $request->get('rented_price_min') != "" && $request->has('rented_price_max') && $request->get('rented_price_max') != "")  {
+        if ($request->has('rented_price_min') && $request->get('rented_price_min') != "-1" && $request->has('rented_price_max') && $request->get('rented_price_max') != "-1")  {
             $query->whereBetween('rented_price', [$request->get('rented_price_min'), $request->get('rented_price_max')]);
-        } else  if ($request->has('rented_price_min') && $request->get('rented_price_min') != "") {
+        } else  if ($request->has('rented_price_min') && $request->get('rented_price_min') != "-1") {
             $query->where('rented_price','>=', $request->get('rented_price_min'));
-        } else  if ($request->has('rented_price_max') && $request->get('rented_price_max') != "") {
+        } else  if ($request->has('rented_price_max') && $request->get('rented_price_max') != "-1") {
             $query->where('rented_price','<=', $request->get('rented_price_max'));
         }
 
 
         //Rental yield price min max
-        if ($request->has('rental_yield_min') && $request->get('rental_yield_min') != "" && $request->has('rental_yield_max') && $request->get('rental_yield_max') != "")  {
+        if ($request->has('rental_yield_min') && $request->get('rental_yield_min') != "-1" && $request->has('rental_yield_max') && $request->get('rental_yield_max') != "-1")  {
             $query->whereBetween('rental_yield', [$request->get('rental_yield_min'), $request->get('rental_yield_max')]);
-        } else  if ($request->has('rental_yield_min') && $request->get('rental_yield_min') != "") {
+        } else  if ($request->has('rental_yield_min') && $request->get('rental_yield_min') != "-1") {
             $query->where('rental_yield','>=', $request->get('rental_yield_min'));
-        } else  if ($request->has('rental_yield_max') && $request->get('rental_yield_max') != "") {
+        } else  if ($request->has('rental_yield_max') && $request->get('rental_yield_max') != "-1") {
             $query->where('rental_yield','<=', $request->get('rental_yield_max'));
         }
 
 
         //Rental yield price min max
-        if ($request->has('valuation_min') && $request->get('valuation_min') != "" && $request->has('valuation_max') && $request->get('valuation_max') != "")  {
+        if ($request->has('valuation_min') && $request->get('valuation_min') != "-1" && $request->has('valuation_max') && $request->get('valuation_max') != "-1")  {
             $query->whereBetween('valuation', [$request->get('valuation_min'), $request->get('valuation_max')]);
-        } else  if ($request->has('valuation_min') && $request->get('valuation_min') != "") {
+        } else  if ($request->has('valuation_min') && $request->get('valuation_min') != "-1") {
             $query->where('valuation','>=', $request->get('valuation_min'));
-        } else  if ($request->has('valuation_max') && $request->get('valuation_max') != "") {
+        } else  if ($request->has('valuation_max') && $request->get('valuation_max') != "-1") {
             $query->where('valuation','<=', $request->get('valuation_max'));
         }
 
