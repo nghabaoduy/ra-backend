@@ -56,7 +56,7 @@ class PropertyController extends Controller {
         if ($request->has('district') && $request->get('district') != "") {
             $query->where('district', $request->get('district'));
         }
-s
+        
         //Floor size min max
         if ($request->has('area_min') && $request->get('area_min') != "-1" && $request->has('area_max') && $request->get('area_max') != "-1")  {
             $query->whereBetween('area', [$request->get('area_min'), $request->get('area_max')]);
