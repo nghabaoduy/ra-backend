@@ -23,7 +23,7 @@ class PropertyController extends Controller {
         $skip = $request->get('skip')?: 0;
         $take = $request->get('take')?:100;
 
-        $query = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages'])->skip($skip)->take($take);
+        $query = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->skip($skip)->take($take);
 
         if ($request->has('agent_id') && $request->get('agent_id') != "") {
 
