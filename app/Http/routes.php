@@ -15,12 +15,8 @@ Route::get('/', 'WelcomeController@index');
 
 Route::get('home', 'HomeController@index');
 
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
 
 $router->resource('user', 'UserController');
 $router->resource('property', 'PropertyController');
 
-$router->post('/myauth', 'BasicAuthController@Auth');
+$router->post('/auth', 'BasicAuthController@Auth');

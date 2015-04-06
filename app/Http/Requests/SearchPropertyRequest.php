@@ -51,7 +51,19 @@ class SearchPropertyRequest extends Request {
             'rental_yield_max' => 'numeric',
 
             'valuation_min' => 'numeric',
-            'valuation_min' => 'numeric',
+            'valuation_max' => 'numeric',
+
+            'electrical_value_min' => 'numeric',
+            'electrical_value_max' => 'numeric',
+
+            'no_of_storey_min' => 'numeric',
+            'no_of_storey_max' => 'numeric',
+
+            'ceiling_height_min' => 'numeric',
+            'ceiling_height_max' => 'numeric',
+
+            'no_of_cargo_lift_min' => 'numeric',
+            'no_of_cargo_lift_max' => 'numeric',
 		];
 	}
 

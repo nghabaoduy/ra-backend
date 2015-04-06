@@ -171,6 +171,167 @@ class PropertyController extends Controller {
             $query->where('main_gate_facing', $request->get('main_gate_facing'));
         }
 
+        //Hdb type equal
+        if ($request->has('hdb_type') && $request->get('hdb_type') != "") {
+            $query->where('hdb_type', $request->get('hdb_type'));
+        }
+
+        //Commercial type equal
+        if ($request->has('commercial_type') && $request->get('commercial_type') != "") {
+            $query->where('commercial_type', $request->get('commercial_type'));
+        }
+
+        //Land type equal
+        if ($request->has('land_type') && $request->get('land_type') != "") {
+            $query->where('land_type', $request->get('land_type'));
+        }
+
+        //Industry type equal
+        if ($request->has('industry_type') && $request->get('industry_type') != "") {
+            $query->where('industry_type', $request->get('industry_type'));
+        }
+
+        //Town equal
+        if ($request->has('town') && $request->get('town') != "") {
+            $query->where('town', $request->get('town'));
+        }
+
+        //Electrical value  min max
+        if ($request->has('electrical_value_min') && $request->get('electrical_value_min') != "-1" && $request->has('electrical_value_max') && $request->get('electrical_value_max') != "-1")  {
+            $query->whereBetween('electrical_value', [$request->get('electrical_value_min'), $request->get('electrical_value_max')]);
+        } else  if ($request->has('electrical_value_min') && $request->get('electrical_value_min') != "-1") {
+            $query->where('electrical_value','>=', $request->get('electrical_value_min'));
+        } else  if ($request->has('electrical_value_max') && $request->get('electrical_value_max') != "-1") {
+            $query->where('electrical_value','<=', $request->get('electrical_value_max'));
+        }
+
+        //Ground level equal
+        if ($request->has('ground_level') && $request->get('ground_level') != "") {
+            $query->where('ground_level', $request->get('ground_level'));
+        }
+
+        //gst equal
+        if ($request->has('gst') && $request->get('gst') != "") {
+            $query->where('gst', $request->get('gst'));
+        }
+
+        //Flatted equal
+        if ($request->has('flatted') && $request->get('flatted') != "") {
+            $query->where('flatted', $request->get('flatted'));
+        }
+
+        //Electrical load equal
+        if ($request->has('electrical_load') && $request->get('electrical_load') != "") {
+            $query->where('electrical_load', $request->get('electrical_load'));
+        }
+
+        //Amps equal
+        if ($request->has('amps') && $request->get('amps') != "") {
+            $query->where('amps', $request->get('amps'));
+        }
+
+        //Vehicle access equal
+        if ($request->has('vehicle_access') && $request->get('vehicle_access') != "") {
+            $query->where('vehicle_access', $request->get('vehicle_access'));
+        }
+
+        //Aircon equal
+        if ($request->has('aircon') && $request->get('aircon') != "") {
+            $query->where('aircon', $request->get('aircon'));
+        }
+
+        //Own pantry equal
+        if ($request->has('own_pantry') && $request->get('own_pantry') != "") {
+            $query->where('own_pantry', $request->get('own_pantry'));
+        }
+
+        //Grease trap equal
+        if ($request->has('grease_trap') && $request->get('grease_trap') != "") {
+            $query->where('grease_trap', $request->get('grease_trap'));
+        }
+
+        //Exhaust equal
+        if ($request->has('exhaust') && $request->get('exhaust') != "") {
+            $query->where('exhaust', $request->get('exhaust'));
+        }
+
+        //Server room equal
+        if ($request->has('server_room') && $request->get('server_room') != "") {
+            $query->where('server_room', $request->get('server_room'));
+        }
+
+        //Grade equal
+        if ($request->has('grade') && $request->get('grade') != "") {
+            $query->where('grade', $request->get('grade'));
+        }
+
+        //Car park equal
+        if ($request->has('car_park') && $request->get('car_park') != "") {
+            $query->where('car_park', $request->get('car_park'));
+        }
+
+        //Garden equal
+        if ($request->has('garden') && $request->get('garden') != "") {
+            $query->where('garden', $request->get('garden'));
+        }
+
+        //Swimming pool equal
+        if ($request->has('swimming_pool') && $request->get('swimming_pool') != "") {
+            $query->where('swimming_pool', $request->get('swimming_pool'));
+        }
+
+        //Basement equal
+        if ($request->has('basement') && $request->get('basement') != "") {
+            $query->where('basement', $request->get('basement'));
+        }
+
+        //Roof terrance equal
+        if ($request->has('roof_terrance') && $request->get('roof_terrance') != "") {
+            $query->where('roof_terrance', $request->get('roof_terrance'));
+        }
+
+        //Room position equal
+        if ($request->has('room_position') && $request->get('room_position') != "") {
+            $query->where('room_position', $request->get('room_position'));
+        }
+
+        //No of storey min max
+        if ($request->has('no_of_storey_min') && $request->get('no_of_storey_min') != "-1" && $request->has('no_of_storey_max') && $request->get('no_of_storey_max') != "-1")  {
+            $query->whereBetween('no_of_storey', [$request->get('no_of_storey_min'), $request->get('no_of_storey_max')]);
+        } else  if ($request->has('no_of_storey_min') && $request->get('no_of_storey_min') != "-1") {
+            $query->where('no_of_storey','>=', $request->get('no_of_storey_min'));
+        } else  if ($request->has('no_of_storey_max') && $request->get('no_of_storey_max') != "-1") {
+            $query->where('no_of_storey','<=', $request->get('no_of_storey_max'));
+        }
+
+        //Ceiling height min max
+        if ($request->has('ceiling_height_min') && $request->get('ceiling_height_min') != "-1" && $request->has('ceiling_height_max') && $request->get('ceiling_height_max') != "-1")  {
+            $query->whereBetween('ceiling_height', [$request->get('ceiling_height_min'), $request->get('ceiling_height_max')]);
+        } else  if ($request->has('ceiling_height_min') && $request->get('ceiling_height_min') != "-1") {
+            $query->where('ceiling_height','>=', $request->get('ceiling_height_min'));
+        } else  if ($request->has('ceiling_height_max') && $request->get('ceiling_height_max') != "-1") {
+            $query->where('ceiling_height','<=', $request->get('ceiling_height_max'));
+        }
+
+        //Floor load min max
+        if ($request->has('floor_load_min') && $request->get('floor_load_min') != "-1" && $request->has('floor_load_max') && $request->get('floor_load_max') != "-1")  {
+            $query->whereBetween('floor_load', [$request->get('floor_load_min'), $request->get('floor_load_max')]);
+        } else  if ($request->has('floor_load_min') && $request->get('floor_load_min') != "-1") {
+            $query->where('floor_load','>=', $request->get('floor_load_min'));
+        } else  if ($request->has('floor_load_max') && $request->get('floor_load_max') != "-1") {
+            $query->where('floor_load','<=', $request->get('floor_load_max'));
+        }
+
+        //No of cargo lift  min max
+        if ($request->has('no_of_cargo_lift_min') && $request->get('no_of_cargo_lift_min') != "-1" && $request->has('no_of_cargo_lift_max') && $request->get('no_of_cargo_lift_max') != "-1")  {
+            $query->whereBetween('no_of_cargo_lift', [$request->get('no_of_cargo_lift_min'), $request->get('no_of_cargo_lift_max')]);
+        } else  if ($request->has('no_of_cargo_lift_min') && $request->get('no_of_cargo_lift_min') != "-1") {
+            $query->where('no_of_cargo_lift','>=', $request->get('no_of_cargo_lift_min'));
+        } else  if ($request->has('no_of_cargo_lift_max') && $request->get('no_of_cargo_lift_max') != "-1") {
+            $query->where('no_of_cargo_lift','<=', $request->get('no_of_cargo_lift_max'));
+        }
+
+
         return response($query->get());
 	}
 

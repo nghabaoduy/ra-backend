@@ -68,7 +68,7 @@ class PropertyTableSeeder extends Seeder {
                 'blk_no'=> array_key_exists('blkNo', $propertyData) ? $propertyData['blkNo'] : NULL,
                 'building_type'=> array_key_exists('buildingType', $propertyData) ? $propertyData['buildingType'] : NULL,
                 'car_park'=> array_key_exists('carPark', $propertyData) ? $propertyData['carPark'] : NULL,
-                'ceiling_height'=> array_key_exists('ceilingHeight', $propertyData) ? $propertyData['ceilingHeight'] : NULL,
+                'ceiling_height'=> array_key_exists('ceilingHeight', $propertyData) ? $propertyData['ceilingHeight'] : 0,
                 'commercial_type'=> array_key_exists('commercialType', $propertyData) ? $propertyData['commercialType'] : NULL,
                 'district'=> array_key_exists('district', $propertyData) ? $propertyData['district'] : NULL,
                 'dual_prop_project_id'=> $dualProp? $dualProp->id : NULL,
