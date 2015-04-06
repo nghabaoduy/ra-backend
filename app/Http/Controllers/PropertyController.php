@@ -35,6 +35,8 @@ class PropertyController extends Controller {
             $query->where('agent_id', $current_agent->id);
 
            // $query->where('agent_id', $request->get('agent_id'));
+        } else {
+            $query->where('submit', 'YES');
         }
 
 
