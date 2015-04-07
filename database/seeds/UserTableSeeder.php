@@ -49,6 +49,7 @@ class UserTableSeeder extends Seeder  {
                 'user_type' => array_key_exists('userType', $userData) ? $userData['userType'] : NULL,
                 'address' => array_key_exists('address', $userData) ? $userData['address'] : NULL,
                 'profile_image_id' => $icon? $icon->id : NULL,
+                'version_code' => array_key_exists('versionCode', $userData) ? $userData['versionCode'] : NULL,
             ];
 
 

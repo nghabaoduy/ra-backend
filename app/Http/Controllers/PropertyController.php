@@ -27,14 +27,15 @@ class PropertyController extends Controller {
 
         if ($request->has('agent_id') && $request->get('agent_id') != "") {
 
+            /*
             //For Beta Test Purpose Only
             $agent_code = $request->get('agent_id');
             $current_agent = User::where('object_id', $agent_code)->first();
             if (!$current_agent || $current_agent->user_type != 'agent') return response(json_encode(['message' => 'Agent not found']), 404);
 
-            $query->where('agent_id', $current_agent->id);
+            $query->where('agent_id', $current_agent->id);*/
 
-           // $query->where('agent_id', $request->get('agent_id'));
+            $query->where('agent_id', $request->get('agent_id'));
         } else {
             $query->where('submit', 'YES');
         }
