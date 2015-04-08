@@ -8,12 +8,15 @@ use App\Property;
 use App\FileAsset;
 use App\User;
 use App\Http\Requests\SearchPropertyRequest;
+use App\Http\Requests\CreatePropertyRequest;
+use App\Http\Requests\UpdatePropertyRequest;
 
 class PropertyController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
 	 *
+     * @param  SearchPropertyRequest  $request
 	 * @return Response
 	 */
 	public function index(SearchPropertyRequest $request)
@@ -351,11 +354,15 @@ class PropertyController extends Controller {
 	/**
 	 * Store a newly created resource in storage.
 	 *
+     * @param  CreatePropertyRequest  $request
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreatePropertyRequest $request)
 	{
 		//
+        //dd ($request->all());
+        $newProp = Property::create($request->all());
+        return response($newProp);
 	}
 
 	/**
@@ -367,6 +374,7 @@ class PropertyController extends Controller {
 	public function show($id)
 	{
 		//
+        return response(Property::find($id));
 	}
 
 	/**
@@ -384,11 +392,19 @@ class PropertyController extends Controller {
 	 * Update the specified resource in storage.
 	 *
 	 * @param  int  $id
+     * @param  UpdatePropertyRequest  $request
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, UpdatePropertyRequest $request)
 	{
 		//
+
+        //dd($request->all());
+        $property = Property::find($id);
+        $data = $request->all();
+        $property->update($data);
+
+        return response($property);
 	}
 
 	/**
@@ -400,6 +416,11 @@ class PropertyController extends Controller {
 	public function destroy($id)
 	{
 		//
+        $property = Property::find($id);
+
+        $property->delete();
+
+        return response(null, 204);
 	}
 
 }
