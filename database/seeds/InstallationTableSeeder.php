@@ -31,7 +31,7 @@ class InstallationTableSeeder extends Seeder  {
 
             $newInstallData = [
                 'object_id' => array_key_exists('objectId', $installData) ? $installData['objectId']: NULL,
-                'appName' => array_key_exists('appName', $installData) ? $installData['appName']: NULL,
+                'app_name' => array_key_exists('appName', $installData) ? $installData['appName']: NULL,
                 'app_identifier' => array_key_exists('appIdentifier', $installData) ? $installData['appIdentifier']: NULL,
                 'app_version' =>  array_key_exists('appVersion', $installData) ? $installData['appVersion'] : 0,
                 'device_token' => array_key_exists('deviceToken', $installData) ? $installData['deviceToken'] : NULL,

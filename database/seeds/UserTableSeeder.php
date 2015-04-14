@@ -7,13 +7,12 @@
  */
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 use App\User;
 
 class UserTableSeeder extends Seeder  {
 
     public function run() {
-        $filename = public_path()."/Data/User.json";
+        $filename = public_path()."/Data/_User.json";
         $contents = File::get($filename);
 
         $dataArr = json_decode($contents, true);
