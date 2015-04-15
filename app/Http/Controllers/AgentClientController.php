@@ -20,7 +20,7 @@ class AgentClientController extends Controller {
 		//
         //dd($agent->toJson());
 
-        if  ($agent->user_type !== 'agent') {
+        if  ($agent->user_type == 'client') {
             return response(json_encode(['message' => 'Current user is not agent']), 400);
         }
 
