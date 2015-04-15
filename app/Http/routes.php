@@ -17,6 +17,9 @@ Route::get('home', 'HomeController@index');
 
 
 $router->resource('user', 'UserController');
+
+$router->resource('agent.client', 'AgentClientController');
+
 $router->resource('property', 'PropertyController');
 
 $router->post('/auth', 'BasicAuthController@Auth');
