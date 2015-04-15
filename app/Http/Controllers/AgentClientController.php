@@ -1,10 +1,12 @@
 <?php namespace App\Http\Controllers;
 
+use App\AgentClient;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class AgentClientController extends Controller {
 
@@ -16,9 +18,25 @@ class AgentClientController extends Controller {
 	public function index(User $agent, Request $request)
 	{
 		//
-        dd('tesasd');
         //dd($agent->toJson());
-        return response($agent);
+
+        if  ($agent->user_type !== 'agent') {
+            return response(json_encode(['message' => 'Current user is not agent']), 400);
+        }
+
+        $data = AgentClient::with('client', 'client.profileImage')->get();
+
+
+        $newData = [];
+
+        foreach($data as $agentClient) {
+            $newData[] = $agentClient->client;
+        }
+
+
+        //dd($data);
+
+        return response(json_encode($newData) );
 	}
 
 	/**

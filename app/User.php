@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use App\FileAsset;
 use Nicolaslopezj\Searchable\SearchableTrait as SearchableTraithableTrait;
+use Illuminate\Support\Facades\DB;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -54,6 +55,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function profileImage() {
         return $this->belongsTo('App\FileAsset', "profile_image_id");
+    }
+
+    public function clients() {
+        return $this->belongsToMany('App\User', 'agent_client', 'agent_id', 'client_id','profileImage');
     }
 
 
