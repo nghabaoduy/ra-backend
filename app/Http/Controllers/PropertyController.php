@@ -420,7 +420,7 @@ class PropertyController extends Controller {
         }
         //dd( $request->file('pdf'));
 
-        $files = $request->file('images');
+        $files = $request->hasFile('images') ? $request->file('images') : [];
 
         $paths = [];
         foreach($files as $file) {
