@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Http\Request;
 use App\Property;
 use App\FileAsset;
@@ -10,6 +11,9 @@ use App\User;
 use App\Http\Requests\SearchPropertyRequest;
 use App\Http\Requests\CreatePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
+use Illuminate\Support\Facades\File;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use App\PropertyImage;
 
 class PropertyController extends Controller {
 
@@ -374,7 +378,7 @@ class PropertyController extends Controller {
 	public function show($id)
 	{
 		//
-        return response(Property::find($id));
+        return response(Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->get());
 	}
 
 	/**
@@ -406,6 +410,53 @@ class PropertyController extends Controller {
 
         return response($property);
 	}
+
+    public function  upload($id, Request $request, Cloud $cloud) {
+
+        $property = Property::find($id);
+
+        if (!$property) {
+            return response(json_encode(['message'=>'property not found']), 404);
+        }
+        //dd( $request->file('pdf'));
+
+        $files = $request->file('images');
+
+        $paths = [];
+        foreach($files as $file) {
+            $randomString = $this->quickRandom(6);
+            $fileName = 'image-'.$randomString.'.'.$file->getClientOriginalExtension();
+            $success = $cloud->put($fileName, File::get($file) );
+
+            if ($success) {
+                $url = 'https://openlabproduction.s3.amazonaws.com/'.$fileName;
+                $newAsset = [
+                    'name' => $fileName,
+                    'url' => $url,
+                    'type' => 'img',
+                    'source' => 'aws-s3'
+                ];
+                $paths[] = $url;
+                $asset = FileAsset::create($newAsset);
+
+                $newPropertyImage  = [
+                    'property_id' => $id,
+                    'file_id' => $asset->id
+                ];
+
+                PropertyImage::create($newPropertyImage);
+            }
+        }
+
+        return response(json_encode($paths), 200);
+    }
+
+    public function quickRandom($length = 16)
+    {
+        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+    }
 
 	/**
 	 * Remove the specified resource from storage.

@@ -18,6 +18,9 @@ Route::get('home', 'HomeController@index');
 
 $router->resource('user', 'UserController');
 
+
+$router->post('/property/{property}/upload', 'PropertyController@upload');
+
 $router->resource('agent.client', 'AgentClientController');
 
 $router->resource('property', 'PropertyController');
