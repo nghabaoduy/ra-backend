@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use App\User;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+
 
 class UserController extends Controller {
 
@@ -34,9 +37,12 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateUserRequest $request)
 	{
 		//
+        $data = $request->all();
+        $newUser = User::create($data);
+        return response($newUser);
 	}
 
 	/**
@@ -67,9 +73,36 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, UpdateUserRequest $request)
 	{
 		//
+        //dd($request->all());
+
+        $user = User::find($id);
+
+        if (!$user)
+            response(json_encode(['message' => 'user not found']), 404);
+
+        $updateData = $request->all();
+
+
+        if ($request->has('username')) {
+            unset($updateData['username']);
+        }
+
+
+        if ($request->has('phone')) {
+            unset($updateData['phone']);
+        }
+
+        if ($request->has('password') && $request->get('password') != '') {
+            $updateData['password'] = bcrypt($updateData['password']);
+        } else {
+            unset($updateData['password']);
+        }
+
+
+        dd($updateData);
 	}
 
 	/**
@@ -81,6 +114,10 @@ class UserController extends Controller {
 	public function destroy($id)
 	{
 		//
+
+        $user = User::find($id);
+        $user->delete();
+        response(null, 204);
 	}
 
 }
