@@ -27,37 +27,37 @@ class DatabaseSeeder extends Seeder {
 
         $d1 = new DateTime();
 
-		$this->call('UserTableSeeder');
+		//$this->call('UserTableSeeder');
         $this->command->info('------------- Total User  ...' . User::all()->count());
 
-        $this->call('InstallationTableSeeder');
+        //$this->call('InstallationTableSeeder');
         $this->command->info('------------- Total Installation  ...' . Installation::all()->count());
 
         $this->call('AgentClientTableSeeder');
         $this->command->info('------------- Total AgentClient  ...' . AgentClient::all()->count());
 
-        $this->call('PropertyTableSeeder');
+        //$this->call('PropertyTableSeeder');
         $this->command->info('------------- Total Property  ...' . Property::all()->count());
 
-        $this->call('PropertyImageTableSeeder');
+        //$this->call('PropertyImageTableSeeder');
         $this->command->info('------------- Total Property Image  ...' . PropertyImage::all()->count());
 
-        $this->call('UserFavoriteTableSeeder');
+        //$this->call('UserFavoriteTableSeeder');
         $this->command->info('------------- Total User Favorite  ...' . UserFavorite::all()->count());
 
-        $this->call('GroupTableSeeder');
+        //$this->call('GroupTableSeeder');
         $this->command->info('------------- Total Group  ...' . Group::all()->count());
 
-        $this->call('GroupSharingTableSeeder');
+        //$this->call('GroupSharingTableSeeder');
         $this->command->info('------------- Total Group sharing  ...' . GroupSharing::all()->count());
 
-        $this->call('GroupParticipationTableSeeder');
+        //$this->call('GroupParticipationTableSeeder');
         $this->command->info('------------- Total Group Participation  ...' . GroupParticipation::all()->count());
 
-        $this->call('ScheduleEventTableSeeder');
+        //$this->call('ScheduleEventTableSeeder');
         $this->command->info('------------- Total Schedule Event  ...' . ScheduleEvent::all()->count());
 
-        $this->call('PartnerTableSeeder');
+        //$this->call('PartnerTableSeeder');
         $this->command->info('------------- Total Partner  ...' . Partner::all()->count());
 
         $d2 = new DateTime();

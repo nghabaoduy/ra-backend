@@ -24,7 +24,7 @@ class AgentClientController extends Controller {
             return response(json_encode(['message' => 'Current user is not agent']), 400);
         }
 
-        $data = AgentClient::with('client', 'client.profileImage')->where('id', $agent->id)->get();
+        $data = AgentClient::with('client', 'client.profileImage')->where('agent_id', $agent->id)->get();
 
 
         $newData = [];
