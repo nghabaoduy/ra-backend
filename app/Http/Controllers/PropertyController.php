@@ -464,7 +464,9 @@ class PropertyController extends Controller {
     }
 
 
-    public function removeAllImages($id) {
+    public function removeAllImages($id)
+    {
+        //dd('here');
         $property = Property::find($id);
 
         if (!$property) {
@@ -473,9 +475,13 @@ class PropertyController extends Controller {
         $propImages = $property->propertyImages;
 
         PropertyImage::where('property_id', $property->id)->delete();
+        
 
-        foreach ($propImages as $image) {
-            $image->delete();
+        if ($propImages) {
+
+            foreach ($propImages as $image) {
+                $image->delete();
+            }
         }
 
         return response(null, 204);
