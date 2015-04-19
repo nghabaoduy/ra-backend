@@ -409,7 +409,9 @@ class PropertyController extends Controller {
 		//
 
         //dd($request->all());
-        $property = Property::find($id);
+        //$property = Property::find($id);
+        $property = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->first();
+
         $data = $request->all();
         $property->update($data);
 
@@ -475,7 +477,7 @@ class PropertyController extends Controller {
         $propImages = $property->propertyImages;
 
         PropertyImage::where('property_id', $property->id)->delete();
-        
+
 
         if ($propImages) {
 
