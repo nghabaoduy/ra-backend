@@ -14,6 +14,7 @@ use App\Http\Requests\UpdatePropertyRequest;
 use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\PropertyImage;
+use App\GroupSharing;
 
 class PropertyController extends Controller {
 
@@ -378,7 +379,11 @@ class PropertyController extends Controller {
 	public function show($id)
 	{
 		//
-        return response(Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->get());
+        $property = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->first();
+        if (!$property) {
+            return response(json_encode(['message'=>'property not found']), 404);
+        }
+        return response($property);
 	}
 
 	/**
@@ -458,6 +463,24 @@ class PropertyController extends Controller {
         return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
     }
 
+
+    public function removeAllImages($id) {
+        $property = Property::find($id);
+
+        if (!$property) {
+            return response(json_encode(['message' => 'property not found'], 404));
+        }
+        $propImages = $property->propertyImages;
+
+        PropertyImage::where('property_id', $property->id)->delete();
+
+        foreach ($propImages as $image) {
+            $image->delete();
+        }
+
+        return response(null, 204);
+    }
+
 	/**
 	 * Remove the specified resource from storage.
 	 *
@@ -468,6 +491,24 @@ class PropertyController extends Controller {
 	{
 		//
         $property = Property::find($id);
+
+        if (!$property) {
+            return response(json_encode(['message' => 'property not found'], 404));
+        }
+        $propImages = $property->propertyImages;
+
+        PropertyImage::where('property_id', $property->id)->delete();
+
+        foreach ($propImages as $image) {
+            $image->delete();
+        }
+
+        $dual = Property::where('dual_prop_project_id', $property->id)->first();
+        if ($dual) {
+            $dual->dual_prop_project_id = null;
+            $dual->save();
+        }
+
 
         $property->delete();
 
