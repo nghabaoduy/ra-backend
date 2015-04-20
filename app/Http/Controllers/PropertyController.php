@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use App\PropertyImage;
 use App\GroupSharing;
+use DateTime;
 
 class PropertyController extends Controller {
 
@@ -431,8 +432,9 @@ class PropertyController extends Controller {
 
         $paths = [];
         foreach($files as $file) {
+            $now = new DateTime();
             $randomString = $this->quickRandom(6);
-            $fileName = 'image-'.$randomString.'.'.$file->getClientOriginalExtension();
+            $fileName = 'image-'.$randomString.'-'.$now->getTimestamp().'.'.$file->getClientOriginalExtension();
             $success = $cloud->put($fileName, File::get($file) );
 
             if ($success) {
@@ -495,7 +497,7 @@ class PropertyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Cloud $fileSystem)
 	{
 		//
         $property = Property::find($id);
@@ -507,7 +509,14 @@ class PropertyController extends Controller {
 
         PropertyImage::where('property_id', $property->id)->delete();
 
+
+
         foreach ($propImages as $image) {
+
+            $fileSrc = $image->source;
+            if ($fileSrc == "aws-s3" && $fileSystem->exists($image->name)) {
+                $fileSystem->delete($image->name);
+            }
             $image->delete();
         }
 

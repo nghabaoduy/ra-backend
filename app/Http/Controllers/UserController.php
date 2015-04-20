@@ -4,9 +4,12 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
 
+use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\ChangePasswordRequest;
 
 
 class UserController extends Controller {
@@ -54,7 +57,7 @@ class UserController extends Controller {
 	public function show($id)
 	{
 		//
-        $user = User::find($id);
+        $user = User::with("profileImage")->where('id', $id)->first();
 
         if (!$user)
             response(json_encode(['message' => 'user not found']), 404);
@@ -83,13 +86,12 @@ class UserController extends Controller {
 		//
         //dd($request->all());
 
-        $user = User::find($id);
+        $user = User::with("profileImage")->where('id', $id)->first();
 
         if (!$user)
             response(json_encode(['message' => 'user not found']), 404);
 
         $updateData = $request->all();
-
 
         if ($request->has('username')) {
             unset($updateData['username']);
@@ -106,9 +108,34 @@ class UserController extends Controller {
             unset($updateData['password']);
         }
 
+        $user->update($updateData);
 
-        dd($updateData);
+        return response($user);
 	}
+
+    public function changePassword($id,ChangePasswordRequest $request) {
+        $user = User::with("profileImage")->where('id', $id)->first();
+
+        if (!$user)
+            response(json_encode(['message' => 'user not found']), 404);
+
+        $oldPassword = $request->get('old_password');
+        $newPassword = $request->get('new_password');
+
+
+        if (Hash::check($oldPassword, $user->password)) {
+            $user->password = bcrypt($newPassword);
+            $user->save();
+        } else {
+            return response(json_encode(['message' => 'invalid credentials']), 500);
+        }
+
+        return response(null, 204);
+    }
+
+    public  function  uploadProfile() {
+
+    }
 
 	/**
 	 * Remove the specified resource from storage.
@@ -116,13 +143,27 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Cloud $fileSystem)
 	{
 		//
-
+        /*
         $user = User::find($id);
-        $user->delete();
-        response(null, 204);
+        if (!$user)
+            response(json_encode(['message' => 'user not found']), 404);
+
+        if ($user->profileImage) {
+            $fileSrc = $user->profileImage->source;
+
+            if ($fileSrc == "aws-s3" && $fileSystem->exists($user->profileImage->name)) {
+                $fileSystem->delete($user->profileImage->name);
+            }
+
+            $user->profileImage->delete();
+        }
+
+
+        $user->delete();*/
+        response(json_encode(['message' => 'function is not support']), 500);
 	}
 
 }

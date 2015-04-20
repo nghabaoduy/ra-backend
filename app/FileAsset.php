@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Filesystem\Cloud;
 
 class FileAsset extends Model {
 
@@ -12,5 +13,4 @@ class FileAsset extends Model {
         'url',
         'type',
         'source'];
-
 }
