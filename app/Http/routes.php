@@ -21,6 +21,7 @@ $router->resource('user', 'UserController');
 
 $router->post('/property/{property}/upload', 'PropertyController@upload');
 $router->delete('/property/{property}/removeImages', 'PropertyController@removeAllImages');
+$router->resource('schedule', 'ScheduleEventController');
 
 $router->resource('agent.client', 'AgentClientController');
 

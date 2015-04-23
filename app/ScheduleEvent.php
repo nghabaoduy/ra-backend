@@ -20,4 +20,21 @@ class ScheduleEvent extends Model {
         'requester_id',
         'receiver_agent_id'
     ];
+
+
+    public function image() {
+        return $this->belongsTo('App\FileAsset', 'image_id');
+    }
+
+    public function property() {
+        return $this->belongsTo('App\Property', 'property_id');
+    }
+
+    public function requester() {
+        return $this->belongsTo('App\User', 'requester_id');
+    }
+
+    public function receiverAgent() {
+        return $this->belongsTo('App\User', 'receiver_agent_id');
+    }
 }
