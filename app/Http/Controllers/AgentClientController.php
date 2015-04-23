@@ -54,9 +54,15 @@ class AgentClientController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(User $agent, Request $request)
 	{
 		//
+        $newAgentClient = [
+            'agent_id' => $agent->id,
+            'client_id' => $request->get('client_id'),
+        ];
+        $new = AgentClient::create($newAgentClient);
+        return response($new);
 	}
 
 	/**
@@ -98,9 +104,15 @@ class AgentClientController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(User $agent, User $client, Request $request)
 	{
 		//
-	}
+        $agentClient = AgentClient::where('client_id', $client->id)->where("agent_id", $agent->id)->first();
 
+        if (!$agentClient)
+            return response(json_encode(['message'=> 'agent client not found']));
+        $agentClient->delete();
+
+        return response(null, 204);
+	}
 }

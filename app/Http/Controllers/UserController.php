@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\AgentClient;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -143,7 +144,7 @@ class UserController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id, Cloud $fileSystem)
+	public function destroy($id, Cloud $fileSystem, Request $request)
 	{
 		//
         /*
@@ -163,7 +164,10 @@ class UserController extends Controller {
 
 
         $user->delete();*/
-        response(json_encode(['message' => 'function is not support']), 500);
+
+
+
+        return response(null, 204);
 	}
 
 }

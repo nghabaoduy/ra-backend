@@ -30,3 +30,4 @@ $router->resource('property', 'PropertyController');
 $router->post('/auth', 'BasicAuthController@Auth');
 $router->post('/user/{user}/changePassword', 'UserController@changePassword');
 
+
