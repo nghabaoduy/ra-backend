@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\CreateAgentClientRequest;
 
 class AgentClientController extends Controller {
 
@@ -17,25 +18,16 @@ class AgentClientController extends Controller {
 	 */
 	public function index(User $agent, Request $request)
 	{
-		//
-        //dd($agent->toJson());
-
         if  ($agent->user_type == 'client') {
             return response(json_encode(['message' => 'Current user is not agent']), 400);
         }
 
         $data = AgentClient::with('client', 'client.profileImage')->where('agent_id', $agent->id)->get();
-
-
         $newData = [];
 
         foreach($data as $agentClient) {
             $newData[] = $agentClient->client;
         }
-
-
-        //dd($data);
-
         return response(json_encode($newData) );
 	}
 
@@ -54,15 +46,36 @@ class AgentClientController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(User $agent, Request $request)
+	public function store(User $agent, CreateAgentClientRequest $request)
 	{
 		//
+        $username = $request->get('username');
+        $user = User::where('username', $username)->first();
+        $data = $request->all();
+
+        if ($request->get('password') == "" || !$request->has('password')) {
+            $data['password'] = bcrypt($request->get('username'));
+        }
+        if (!$user) {
+            $user = User::create($data);
+        } else {
+            $user->update($data);
+        }
+
+        $agentClient = AgentClient::with('agent', 'client')->where('client_id', $user->id)->where("agent_id", $agent->id)->first();
+
+        if ($agentClient) {
+            return response($agentClient);
+        }
+
         $newAgentClient = [
             'agent_id' => $agent->id,
-            'client_id' => $request->get('client_id'),
+            'client_id' => $user->id,
         ];
         $new = AgentClient::create($newAgentClient);
-        return response($new);
+
+        $data = AgentClient::where('id', $new->id)->with('agent', 'client')->first();
+        return response($data);
 	}
 
 	/**

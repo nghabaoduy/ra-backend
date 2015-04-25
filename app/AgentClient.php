@@ -18,4 +18,8 @@ class AgentClient extends Model {
         return $this->belongsTo('App\User', 'client_id');
     }
 
+    public function agent() {
+        return $this->belongsTo('App\User', 'agent_id');
+    }
+
 }
