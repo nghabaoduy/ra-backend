@@ -37,7 +37,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'user_type',
         'agent_phone',
         'phone',
-        'profile_image_id'
+        'profile_image_id',
+        'is_client_key'
     ];
 
     protected $searchable = [

@@ -18,7 +18,8 @@ class ScheduleEvent extends Model {
         'image_id',
         'property_id',
         'requester_id',
-        'receiver_agent_id'
+        'receiver_agent_id',
+        'is_deleted'
     ];
 
 

@@ -11,7 +11,7 @@ class CreateGroupRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return false;
+		return true;
 	}
 
 	/**
@@ -23,6 +23,7 @@ class CreateGroupRequest extends Request {
 	{
 		return [
 			//
+            'creator_id' => 'required'
 		];
 	}
 

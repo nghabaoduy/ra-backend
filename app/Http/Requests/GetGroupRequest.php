@@ -22,8 +22,6 @@ class GetGroupRequest extends Request {
 	public function rules()
 	{
 		return [
-			//
-            'creator_id' => 'required'
 		];
 	}
 
