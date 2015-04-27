@@ -66,7 +66,7 @@ class ScheduleEventController extends Controller {
 	{
 		//
         $scheduleEvent = ScheduleEvent::with('image', 'property', 'requester', 'requester.profileImage', 'receiverAgent','receiverAgent.profileImage', 'property.propertyImage', 'property.agent', 'property.creator', 'property.propertyImages', 'property.agent.profileImage', 'property.creator.profileImage')
-                                        ->where('id', $id);
+                                        ->where('id', $id)->first();
         if (!$scheduleEvent)
             return response(json_encode(['message' => 'schedule not found']));
         return response($scheduleEvent);
@@ -90,9 +90,17 @@ class ScheduleEventController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, Request $request)
 	{
 		//
+        $scheduleEvent = ScheduleEvent::with('image', 'property', 'requester', 'requester.profileImage', 'receiverAgent','receiverAgent.profileImage', 'property.propertyImage', 'property.agent', 'property.creator', 'property.propertyImages', 'property.agent.profileImage', 'property.creator.profileImage')
+            ->where('id', $id)->first();
+        if (!$scheduleEvent)
+            return response(json_encode(['message' => 'schedule not found']));
+
+        $scheduleEvent->update($request->all());
+
+        return response($scheduleEvent);
 	}
 
 	/**
@@ -104,6 +112,14 @@ class ScheduleEventController extends Controller {
 	public function destroy($id)
 	{
 		//
+        $scheduleEvent = ScheduleEvent::with('image', 'property', 'requester', 'requester.profileImage', 'receiverAgent','receiverAgent.profileImage', 'property.propertyImage', 'property.agent', 'property.creator', 'property.propertyImages', 'property.agent.profileImage', 'property.creator.profileImage')
+            ->where('id', $id)->first();
+        if (!$scheduleEvent)
+            return response(json_encode(['message' => 'schedule not found']));
+
+        $scheduleEvent->delete();
+
+        return response(null, 204);
 	}
 
 }
