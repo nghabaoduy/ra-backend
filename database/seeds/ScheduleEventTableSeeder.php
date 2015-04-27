@@ -68,7 +68,8 @@ class ScheduleEventTableSeeder extends Seeder {
                 'image_id' => $image? $image->id :NULL,
                 'property_id' => $property ? $property->id : NULL,
                 'requester_id' => $requester ? $requester->id : NULL,
-                'receiver_agent_id' => $receiver_agent ? $receiver_agent->id : NULL
+                'receiver_agent_id' => $receiver_agent ? $receiver_agent->id : NULL,
+                'is_deleted' => array_key_exists('isDeleted', $scheduleData) ? $scheduleData['isDeleted'] : false
             ];
 
             ScheduleEvent::create($newScheduleData);
