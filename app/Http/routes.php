@@ -27,6 +27,10 @@ $router->resource('agent.client', 'AgentClientController');
 
 $router->resource('property', 'PropertyController');
 
+$router->resource('group', 'GroupController');
+$router->resource('group.participation', 'GroupParticipationController');
+$router->resource('group.sharing', 'GroupSharingController');
+
 $router->post('/auth', 'BasicAuthController@Auth');
 $router->post('/user/{user}/changePassword', 'UserController@changePassword');
 
