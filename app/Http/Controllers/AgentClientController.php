@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CreateAgentClientRequest;
+use App\Property;
+use Illuminate\Contracts\Filesystem\Cloud;
+use App\PropertyImage;
+
 
 class AgentClientController extends Controller {
 
@@ -117,13 +121,42 @@ class AgentClientController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(User $agent, User $client, Request $request)
+	public function destroy(User $agent, User $client, Request $request, Cloud $fileSystem)
 	{
 		//
         $agentClient = AgentClient::where('client_id', $client->id)->where("agent_id", $agent->id)->first();
 
         if (!$agentClient)
             return response(json_encode(['message'=> 'agent client not found']));
+        $properties =  Property::where('creator_id', $client->id)->get();
+
+        foreach ($properties as $property ) {
+            $propImages = $property->propertyImages;
+
+            PropertyImage::where('property_id', $property->id)->delete();
+
+
+
+            foreach ($propImages as $image) {
+
+                $fileSrc = $image->source;
+                if ($fileSrc == "aws-s3" && $fileSystem->exists($image->name)) {
+                    $fileSystem->delete($image->name);
+                }
+                $image->delete();
+            }
+
+            $dual = Property::where('dual_prop_project_id', $property->id)->first();
+            if ($dual) {
+                $dual->dual_prop_project_id = null;
+                $dual->save();
+            }
+
+
+            $property->delete();
+        }
+
+        dd($properties);
         $agentClient->delete();
 
         return response(null, 204);
