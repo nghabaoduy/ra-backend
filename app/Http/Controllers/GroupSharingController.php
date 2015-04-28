@@ -4,6 +4,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Property;
+use App\Group;
+use App\GroupParticipation;
 
 class GroupSharingController extends Controller {
 
@@ -12,9 +15,33 @@ class GroupSharingController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($id, Request $request)
 	{
+        $group = Group::with('creator','members', 'creator.profileImage')->where('id', $id)->first();
+        if (!$group)
+            return response(json_encode(['message' => 'group not found']));
+
+        $take = 100;
+        $skip = 0;
+
+        if ($request->has('take')) {
+            $take = $request->get('take');
+        }
+
+        if ($request->has('skip')) {
+            $skip = $request->get('skip');
+        }
 		//
+        $data = [];
+
+
+        $data[] = $group->creator_id;
+        foreach ($group->members as $member) {
+            $data[] = $member->id;
+        }
+        $properties = Property::whereIn('agent_id', $data)->where('submit', 'YES')->skip($skip)->take($take)->get();
+
+        return response($properties);
 	}
 
 	/**

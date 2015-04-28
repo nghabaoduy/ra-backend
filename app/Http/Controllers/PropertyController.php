@@ -438,7 +438,7 @@ class PropertyController extends Controller {
             $success = $cloud->put($fileName, File::get($file) );
 
             if ($success) {
-                $url = 'https://openlabproduction.s3.amazonaws.com/'.$fileName;
+                $url = env('S3_URL').$fileName;
                 $newAsset = [
                     'name' => $fileName,
                     'url' => $url,

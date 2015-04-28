@@ -2,8 +2,9 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
+use App\Group;
+use App\GroupParticipation;
 
 class GroupParticipationController extends Controller {
 
@@ -12,7 +13,7 @@ class GroupParticipationController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($id)
 	{
 		//
 	}
@@ -32,9 +33,22 @@ class GroupParticipationController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store($id, Request $request)
 	{
 		//
+        $group = Group::with('creator','members', 'creator.profileImage')->where('id', $id)->first();
+        if (!$group)
+            return response(json_encode(['message' => 'group not found']));
+
+
+        $requestData = [
+            'is_accept' => $request->get('is_accept'),
+            'user_id' => $request->get('user_id'),
+            'group_id' => $id
+        ];
+        $newMember = GroupParticipation::create($requestData);
+
+        return response($newMember);
 	}
 
 	/**
@@ -65,9 +79,22 @@ class GroupParticipationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($id, $memberId, Request $request)
 	{
 		//
+        $member = GroupParticipation::where('id', $memberId)->first();
+
+        if (!$member) {
+            return response(json_encode(['message' => 'participation not found']));
+        }
+        $requestData = [
+            'is_accept' => $request->get('is_accept'),
+            'user_id' => $request->get('user_id'),
+            'group_id' => $id
+        ];
+        $member->update($requestData);
+
+        return response($member);
 	}
 
 	/**
@@ -76,9 +103,17 @@ class GroupParticipationController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($id, $memberId)
 	{
 		//
+
+        $member = GroupParticipation::where('id', $memberId)->first();
+
+        if (!$member) {
+            return response(json_encode(['message' => 'participation not found']));
+        }
+        $member->delete();
+        return response(null, 204);
 	}
 
 }

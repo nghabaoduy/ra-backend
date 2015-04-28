@@ -33,7 +33,6 @@ class GroupController extends Controller {
 
             $participations = GroupParticipation::with('group', 'group.creator','group.members', 'group.creator.profileImage')->where('user_id', $request->get('user_id'))->get();
 
-
             foreach ($participations as $part) {
                 $data['is_members'] = $part->group;
             }
