@@ -9,7 +9,7 @@ class Installation extends Model {
 
     protected $fillable = [
         'object_id',
-        'appName',
+        'app_name',
         'app_identifier',
         'app_version',
         'device_token',
