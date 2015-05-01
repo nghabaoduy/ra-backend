@@ -11,4 +11,12 @@ class UserFavorite extends Model {
         'user_id',
         'property_id',
     ];
+
+    public function property() {
+        return $this->belongsTo('App\Property', 'property_id');
+    }
+
+    public function user() {
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }

@@ -14,11 +14,27 @@ class FavoriteController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
 		//
-        $data = UserFavorite::get();
+        $take = 100;
+        $skip = 0;
+        if ($request->has('take'))
+            $take = $request->get('take');
 
+        if ($request->has('skip'))
+            $skip = $request->get('skip');
+
+
+
+
+        $data = UserFavorite::with('user', 'property', 'user.profileImage', 'property.propertyImage', 'property.agent', 'property.creator', 'property.propertyImages', 'property.agent.profileImage', 'property.creator.profileImage');
+
+        if ($request->has('user_id')) {
+            $data = $data->where('user_id', $request->get('user_id'));
+        }
+
+        $data = $data->get();
         return response($data);
 	}
 
