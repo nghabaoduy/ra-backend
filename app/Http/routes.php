@@ -35,7 +35,7 @@ $router->resource('group.sharing', 'GroupSharingController');
 $router->resource('installation', 'InstallationController');
 $router->resource('partner', 'PartnerController');
 $router->resource('favorite', 'FavoriteController');
-
+$router->post('/unfavorite', 'FavoriteController@unfavorite');
 $router->post('/auth', 'BasicAuthController@Auth');
 $router->post('/user/{user}/changePassword', 'UserController@changePassword');
 

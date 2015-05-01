@@ -60,6 +60,14 @@ class FavoriteController extends Controller {
         return response($newFavorite);
 	}
 
+    public function unfavorite(Request $request) {
+        $favorite = UserFavorite::where('user_id', $request->get('user_id'))->where('property_id', $request->get('property_id'))->first();
+        if (!$favorite)
+            return response(json_encode(['message'=>'Favorite not found'] ));
+        $favorite->delete();
+        return response($favorite);
+    }
+
 	/**
 	 * Display the specified resource.
 	 *
