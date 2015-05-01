@@ -13,10 +13,10 @@ class PartnerController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
 		//
-        $data = Partner::get();
+        $data = Partner::where('creator_id', $request->get('creator_id'))->where('type', $request->get('type'))->get();
         return response($data);
 	}
 
