@@ -25,16 +25,16 @@ class FavoriteController extends Controller {
         if ($request->has('skip'))
             $skip = $request->get('skip');
 
-
-
-
         $data = UserFavorite::with('user', 'property', 'user.profileImage', 'property.propertyImage', 'property.agent', 'property.creator', 'property.propertyImages', 'property.agent.profileImage', 'property.creator.profileImage');
 
         if ($request->has('user_id')) {
             $data = $data->where('user_id', $request->get('user_id'));
         }
+        if ($request->has('property_id')) {
+            $data = $data->where('property_id', $request->get('property_id'));
+        }
 
-        $data = $data->get();
+        $data = $data->take($take)->skip($skip)->get();
         return response($data);
 	}
 
