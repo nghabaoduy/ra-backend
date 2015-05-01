@@ -25,7 +25,8 @@ class GroupController extends Controller {
         if ($request->has('user_id') && $request->get('user_id') != "") {
             $data = [];
             $allData = Group::with('creator','members', 'creator.profileImage')->where('creator_id', $request->get('user_id'))->get();
-
+            $data["is_creator"] = [];
+            $data['is_members'] = [];
 
             foreach ($allData as $group) {
                 $data["is_creator"][] = $group;
