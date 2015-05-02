@@ -20,10 +20,14 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		//
-        return response(User::with("profileImage")->get());
+        $query = User::with("profileImage");
+        if ($request->has('user_type')) {
+            $query = $query->where('user_type', $request->get('user_type'));
+        }
+        $query = $query->get();
+        return response($query);
 	}
 
 	/**
