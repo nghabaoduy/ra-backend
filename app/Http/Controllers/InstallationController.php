@@ -39,8 +39,16 @@ class InstallationController extends Controller {
 	public function store(Request $request)
 	{
 		//
-        $newInstallation = Installation::updateOrCreate($request->all());
-        return response($newInstallation);
+        $token = $request->get('device_token');
+
+        $installation = Installation::where('device_token', $token)->first();
+        if ($installation) {
+            $installation->update($request->all());
+        } else {
+            $installation = Installation::create($request->all());
+        }
+
+        return response($installation);
 	}
 
 	/**
