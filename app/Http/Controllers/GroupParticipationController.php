@@ -107,7 +107,7 @@ class GroupParticipationController extends Controller {
 	{
 		//
 
-        $member = GroupParticipation::where('id', $memberId)->first();
+        $member = GroupParticipation::where('user_id', $memberId)->first();
 
         if (!$member) {
             return response(json_encode(['message' => 'participation not found']));
