@@ -82,7 +82,7 @@ class GroupParticipationController extends Controller {
 	public function update($id, $memberId, Request $request)
 	{
 		//
-        $member = GroupParticipation::where('id', $memberId)->first();
+        $member = GroupParticipation::where('user_id', $memberId)->first();
 
         if (!$member) {
             return response(json_encode(['message' => 'participation not found']));
