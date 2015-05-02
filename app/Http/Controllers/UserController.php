@@ -23,7 +23,7 @@ class UserController extends Controller {
 	public function index()
 	{
 		//
-        return response(User::search('client')->with("profileImage")->get());
+        return response(User::with("profileImage")->get());
 	}
 
 	/**

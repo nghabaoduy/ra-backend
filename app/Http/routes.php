@@ -43,8 +43,12 @@ $router->post('/user/{user}/changePassword', 'UserController@changePassword');
 use App\Services\NotificationService;
 $router->get('/testing', function() {
     $push = new NotificationService('sg.com.hvsolutions.realJamesGoh', '436376f72e66ac3f55499e63952eacd4c7c1b64f3bd7ae09671e0453e3a0b113', true);
-    $result = $push->sendPush(['alert' => 'abc']);
-    return response(json_encode($result));
+
+    //dd($scheduleEvent);
+
+    $data = ['alert' => 'abc' , 'pushType' => 'group_tab3', 'group_id' => 1];
+    $result = $push->sendPush($data);
+    return response(json_encode($data));
 });
 
 
