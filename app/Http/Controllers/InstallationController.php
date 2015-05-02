@@ -39,7 +39,7 @@ class InstallationController extends Controller {
 	public function store(Request $request)
 	{
 		//
-        $newInstallation = Installation::create($request->all());
+        $newInstallation = Installation::updateOrCreate($request->all());
         return response($newInstallation);
 	}
 
