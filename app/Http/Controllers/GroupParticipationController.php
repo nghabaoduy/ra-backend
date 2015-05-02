@@ -89,7 +89,7 @@ class GroupParticipationController extends Controller {
         }
         $requestData = [
             'is_accept' => $request->get('is_accept'),
-            'user_id' => $request->get('user_id'),
+            'user_id' => $memberId,
             'group_id' => $id
         ];
         $member->update($requestData);
