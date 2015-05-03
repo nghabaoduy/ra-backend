@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Group;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -117,9 +118,42 @@ class NotificationController extends Controller {
         $appIdentifier = $request->get('app_identifier');
         $userId = $request->get('user_id');
         $isDev = boolval($request->get('is_dev'));
-
-
+        $msg = [];
         $message = $request->get('message');
+
+
+        if ($request->has('group_sharing') && $request->get('group_sharing') == 'share') {
+
+            $groupId = $message['group_id'];
+
+            $group = Group::with('creator','members', 'creator.profileImage')->where('id', $groupId)->first();
+
+            if ($group) {
+                foreach ($group->members as $member) {
+                    $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->get();
+                    foreach ($allInstallation as $installation) {
+                        if ($installation->device_token) {
+                            $push = new NotificationService($installation->app_identifier, $installation->device_token, $isDev);
+
+                            $customMessage = [
+                                'alert' => 'My groups - '.$group->title.': New share listing',
+                                'pushType' => 'group_tab3',
+                                'group_id' => $groupId
+                            ];
+                            $result = $push->sendPush($customMessage);
+                            if ($result) {
+                                $msg[]= "send to members ". $installation->id ;
+                            } else {
+                                $msg[]= "Failed send to members". $installation->id ;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
 //($message);
         //dd($isDev);
 

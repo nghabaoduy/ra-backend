@@ -39,7 +39,7 @@ class GroupSharingController extends Controller {
         foreach ($group->members as $member) {
             $data[] = $member->id;
         }
-        $properties = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->whereIn('agent_id', $data)->where('submit', 'YES')->skip($skip)->take($take)->get();
+        $properties = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->whereIn('agent_id', $data)->where('submit', 'YES')->orderBy('created_at', 'DESC')->skip($skip)->take($take)->get();
 
         return response($properties);
 	}
