@@ -1,3 +1,7 @@
+
+<?php
+header ("Content-Type:text/xml");
+?>
 <root>
 	<item
         background="http://thescalaresale.com/wp-content/uploads/2012/10/Scala-Night-View.jpg"
