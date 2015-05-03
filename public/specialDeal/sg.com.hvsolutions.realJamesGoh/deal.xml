@@ -1,0 +1,40 @@
+
+<root>
+	<item
+        background="http://thescalaresale.com/wp-content/uploads/2012/10/Scala-Night-View.jpg"
+        status="New Launch"
+        subject="For Sale - Discover the Charm of the Indochine"
+        price="(Price on Application)"
+        address="9 Bartley Road (Serangoon/ Thomson (D19-20))"
+        createdAt="Listed on Nov 11, 2013"
+        advertiser="Advertiser: SSA"
+        phone="85881888"
+        district="District 19"
+        freeHold="Free Hold"
+        units="12 units"
+        type="Wide selection of 1 to 4 bedrooms, lofts and penthouses"
+        developmentName="The Quinn"
+        propertyType="Apartment"
+        developer="Bartley Homes Pte Ltd"
+        country="Singapore"
+        description="N/A">
+	</item>
+	<item background="http://www.executivecondo.sg/wp-content/uploads/2011/03/singapore-condo.jpg"
+        status="Old Launch"
+        subject="For Sale - Exquisite living in a development"
+        price="100,000,000"
+        address="1 Sommerville Walk (Balestier/ Geylang (D12-14))"
+        createdAt="Listed on Dec 12, 2011"
+        advertiser="Advertiser: SSA"
+        phone="93615015"
+        district="District 5"
+        freeHold="Free Hold"
+        units="5 units"
+        type="Wide selection of 1 to 2 bedrooms, lofts and penthouses"
+        developmentName="The West"
+        propertyType="HDB"
+        developer="West Pte Ltd"
+        country="Singapore"
+        description="TBA">
+	</item>
+</root>
