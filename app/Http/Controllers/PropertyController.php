@@ -347,6 +347,17 @@ class PropertyController extends Controller {
         return response($query->get());
 	}
 
+    public function getProjectList() {
+        $list = Property::where('project', '!=', '')->groupBy('project')->get();
+
+        $data = [];
+
+        foreach ($list as $property) {
+            $data[] = $property->project;
+        }
+        return response(json_encode($data));
+    }
+
 	/**
 	 * Show the form for creating a new resource.
 	 *
