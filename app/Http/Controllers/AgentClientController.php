@@ -156,7 +156,6 @@ class AgentClientController extends Controller {
             $property->delete();
         }
 
-        dd($properties);
         $agentClient->delete();
 
         return response(null, 204);
