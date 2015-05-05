@@ -39,7 +39,7 @@ $router->resource('favorite', 'FavoriteController');
 $router->post('/unfavorite', 'FavoriteController@unfavorite');
 $router->post('/auth', 'BasicAuthController@Auth');
 $router->post('/user/{user}/changePassword', 'UserController@changePassword');
-
+$router->post('/user/{user}/uploadProfile', 'UserController@uploadProfile');
 
 use App\Services\NotificationService;
 $router->get('/testing', function() {

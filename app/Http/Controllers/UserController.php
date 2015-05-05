@@ -11,7 +11,9 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\ChangePasswordRequest;
-
+use DateTime;
+use Illuminate\Support\Facades\File;
+use App\FileAsset;
 
 class UserController extends Controller {
 
@@ -118,6 +120,44 @@ class UserController extends Controller {
         return response($user);
 	}
 
+    public function uploadProfile($id, Request $request, Cloud $cloud) {
+        $user = User::where('id', $id)->first();
+        if (!$user)
+            return response(json_encode(['message' => 'user not found']), 404);
+        $file = $request->file('image');
+
+        if ($file) {
+            $now = new DateTime();
+            $randomString = $this->quickRandom(6);
+            $fileName = 'image-'.$randomString.'-'.$now->getTimestamp().'.'.$file->getClientOriginalExtension();
+            $success = $cloud->put($fileName, File::get($file) );
+
+            if ($success) {
+                $url = env('S3_URL').$fileName;
+                $newAsset = [
+                    'name' => $fileName,
+                    'url' => $url,
+                    'type' => 'img',
+                    'source' => 'aws-s3'
+                ];
+                $paths[] = $url;
+                $asset = FileAsset::create($newAsset);
+
+                $user->profile_image_id = $asset->id;
+                $user->update();
+            }
+        }
+
+        return response(json_encode(['url' => $url]), 200);
+    }
+
+    public function quickRandom($length = 16)
+    {
+        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+    }
+
     public function changePassword($id,ChangePasswordRequest $request) {
         $user = User::with("profileImage")->where('id', $id)->first();
 
@@ -137,11 +177,6 @@ class UserController extends Controller {
 
         return response(null, 204);
     }
-
-    public  function  uploadProfile() {
-
-    }
-
 	/**
 	 * Remove the specified resource from storage.
 	 *
