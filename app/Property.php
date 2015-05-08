@@ -68,7 +68,8 @@ class Property extends Model {
         'unit_no',
         'valuation',
         'vehicle_access',
-        'creator_id'
+        'creator_id',
+        'comment'
     ];
 
     public function propertyImage() {
