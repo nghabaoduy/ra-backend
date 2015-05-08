@@ -128,7 +128,7 @@ class NotificationController extends Controller {
 
             $group = Group::with('creator','members', 'creator.profileImage')->where('id', $groupId)->first();
 
-            if ($group) {
+            if ($group && $group->switch2 === true) {
                 foreach ($group->members as $member) {
                     $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->get();
                     foreach ($allInstallation as $installation) {
