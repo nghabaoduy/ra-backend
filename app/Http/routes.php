@@ -55,3 +55,4 @@ $router->get('/testing', function() {
 
 $router->post('/pushAll', 'NotificationController@pushAll');
 $router->post('/pushTo', 'NotificationController@pushTo');
+$router->post('/marketNewProperty', 'NotificationController@marketNewProperty');

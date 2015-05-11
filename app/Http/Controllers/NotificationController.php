@@ -4,11 +4,14 @@ use App\Group;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Property;
 use Illuminate\Http\Request;
 use App\Services\NotificationService;
 use App\Installation;
 use App\Http\Requests\SendAllNotificationRequest;
 use App\Http\Requests\SendToNotificationRequest;
+use App\Services\NotificationCenter;
+use App\GroupParticipation;
 
 class NotificationController extends Controller {
 
@@ -150,15 +153,7 @@ class NotificationController extends Controller {
                 }
             }
         }
-
-
-
-//($message);
-        //dd($isDev);
-
         $all = Installation::where('app_identifier', $appIdentifier)->where('user_id', $userId)->get();
-            //dd($all);
-
 
         foreach ($all as $installation) {
             if ($installation->device_token) {
@@ -172,6 +167,61 @@ class NotificationController extends Controller {
             }
         }
 
+
+        return response(json_encode($msg));
+    }
+
+
+    public function marketNewProperty(Request $request) {
+        $appIdentifier = $request->get('app_identifier');
+        $userId = $request->get('user_id');
+        $isDev = boolval($request->get('is_dev'));
+
+        $msg = [];
+
+        $data = [];
+        $allData = Group::with('creator','members', 'creator.profileImage')->where('creator_id', $userId)->get();
+
+
+        foreach ($allData as $group) {
+            $data[] = $group;
+        }
+
+        $participations = GroupParticipation::with('group', 'group.creator','group.members', 'group.creator.profileImage')->where('user_id', $userId)->get();
+
+        foreach ($participations as $part) {
+            $data[] = $part->group;
+        }
+
+
+        foreach ($data as $group) {
+            if (boolval($group->switch2) == true) {
+                $msg[]= "Send to Group ". $group->id." is allowed";
+                foreach ($group->members as $member) {
+                    $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->orWhere('user_id', $group->creator_id)->get();
+                    foreach ($allInstallation as $installation) {
+                        if ($installation->device_token && $installation->user_id != $userId) {
+                            $push = new NotificationService($installation->app_identifier, $installation->device_token, $isDev);
+
+                            $customMessage = [
+                                'alert' => 'My groups - '.$group->title.': New share listing',
+                                'pushType' => 'group_tab3',
+                                'group_id' => $group->id
+                            ];
+                            $result = $push->sendPush($customMessage);
+                            if ($result) {
+                                $msg[]= "send to members ". $installation->id ;
+                            } else {
+                                $msg[]= "Failed send to members". $installation->id ;
+                            }
+                        }
+                    }
+                }
+
+            } else {
+                $msg[]= "Group ". $group->id." is not allowed";
+            }
+        }
 
         return response(json_encode($msg));
     }

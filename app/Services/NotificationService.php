@@ -34,7 +34,6 @@
          //dd($this->localCert);
      }
 
-
      public function sendPush(array $data) {
          $data['sound'] = 'default';
          $ctx = stream_context_create();
