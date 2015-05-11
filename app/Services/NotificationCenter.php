@@ -31,7 +31,11 @@ class NotificationCenter {
         $this->isDev = $isDev;
 
 
-        $data['sound'] = 'default';
+
+
+    }
+
+    public function openSocket() {
         $ctx = stream_context_create();
         stream_context_set_option($ctx, 'ssl', 'local_cert',$this->localCert);
         stream_context_set_option($ctx, 'ssl', 'passphrase', $this->appPassPhrase);
@@ -58,6 +62,7 @@ class NotificationCenter {
     }
 
     public function sendPush(array $data, $device_token) {
+        $data['sound'] = 'default';
         $body['aps'] = $data;
         $payload = json_encode($body);
         $msg = chr(0) . pack('n', 32) . pack('H*', $device_token) . pack('n', strlen($payload)) . $payload;

@@ -108,12 +108,13 @@ class NotificationController extends Controller {
                 $result = $push->sendPush($message);
                 if ($result) {
                     $msg[]= "send to ". $installation->id ;
+                    sleep(1);
                 } else {
                     $msg[]= "Failed send to ". $installation->id ;
                 }
             }
         }
-
+        NotificationService::closeSocket();
         return response(json_encode($msg));
     }
 
@@ -145,6 +146,7 @@ class NotificationController extends Controller {
                             $result = $push->sendPush($customMessage);
                             if ($result) {
                                 $msg[]= "send to members ". $installation->id ;
+                                sleep(1);
                             } else {
                                 $msg[]= "Failed send to members". $installation->id ;
                             }
@@ -167,7 +169,7 @@ class NotificationController extends Controller {
             }
         }
 
-
+        NotificationService::closeSocket();
         return response(json_encode($msg));
     }
 
@@ -178,6 +180,8 @@ class NotificationController extends Controller {
         $isDev = boolval($request->get('is_dev'));
 
         $msg = [];
+
+        $pushList = [];
 
         $data = [];
         $allData = Group::with('creator','members', 'creator.profileImage')->where('creator_id', $userId)->get();
@@ -196,25 +200,28 @@ class NotificationController extends Controller {
 
         foreach ($data as $group) {
             if (boolval($group->switch2) == true) {
+
                 $msg[]= "Send to Group ". $group->id." is allowed";
                 foreach ($group->members as $member) {
-                    $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->orWhere('user_id', $group->creator_id)->get();
-                    foreach ($allInstallation as $installation) {
-                        if ($installation->device_token && $installation->user_id != $userId) {
-                            $push = new NotificationService($installation->app_identifier, $installation->device_token, $isDev);
+                    $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->get();
 
-                            $customMessage = [
-                                'alert' => 'My groups - '.$group->title.': New share listing',
-                                'pushType' => 'group_tab3',
-                                'group_id' => $group->id
-                            ];
-                            $result = $push->sendPush($customMessage);
-                            if ($result) {
-                                $msg[]= "send to members ". $installation->id ;
-                            } else {
-                                $msg[]= "Failed send to members". $installation->id ;
-                            }
+                    foreach ($allInstallation as $installation) {
+
+                        if ($installation->device_token && $installation->user_id != $userId) {
+
+                            $pushList[] = ['installation' => $installation];//, 'group' => $group];
                         }
+                    }
+
+
+
+                }
+                $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $group->creator_id)->get();
+                foreach ($allInstallation as $installation) {
+
+                    if ($installation->device_token && $installation->user_id != $userId) {
+
+                        $pushList[] = ['installation' => $installation, 'group' => $group];
                     }
                 }
 
@@ -222,6 +229,26 @@ class NotificationController extends Controller {
                 $msg[]= "Group ". $group->id." is not allowed";
             }
         }
+
+        foreach ($pushList as $myPush) {
+            $push = new NotificationService($myPush['installation']->app_identifier, $myPush['installation']->device_token, $isDev);
+
+            $customMessage = [
+                'alert' => 'My groups - '.$myPush['group']->title.': New share listing',
+                'pushType' => 'group_tab3',
+                'group_id' => $myPush['group']->id
+            ];
+            $result = $push->sendPush($customMessage);
+            if ($result) {
+                $msg[]= "send to members ". $myPush['installation']->id ;
+                sleep(1);
+            } else {
+                $msg[]= "Failed send to members". $myPush['installation']->id ;
+            }
+        }
+
+
+        NotificationService::closeSocket();
 
         return response(json_encode($msg));
     }

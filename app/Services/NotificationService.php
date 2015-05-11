@@ -15,6 +15,7 @@
      private $localCert = null;
      private $isDev = 0;
      private $dev = false;
+     public static $fp = null;
 
      public function __construct($appIdentifier, $deviceToken, $isDev = false)
      {
@@ -34,40 +35,59 @@
          //dd($this->localCert);
      }
 
-     public function sendPush(array $data) {
-         $data['sound'] = 'default';
+     public function openSocket() {
          $ctx = stream_context_create();
          stream_context_set_option($ctx, 'ssl', 'local_cert',$this->localCert);
          stream_context_set_option($ctx, 'ssl', 'passphrase', $this->appPassPhrase);
          if ($this->isDev) {
-             $fp = stream_socket_client(
+             static::$fp = stream_socket_client(
                  'ssl://gateway.sandbox.push.apple.com:2195', $err,
                  $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
 
          } else {
-             $fp = stream_socket_client(
+             dd(static::$fp);
+
+             static::$fp = stream_socket_client(
                  'ssl://gateway.push.apple.com:2195', $err,
                  $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
-
          }
 
-         if (!$fp) {
+         if (!static::$fp) {
              return false;
              //return ['message' => "Failed to connect: $err $errstr" . PHP_EOL];
          }
 
+     }
+
+     public static function closeSocket() {
+         if (static::$fp) {
+             fclose(static::$fp);
+             static::$fp = null;
+         }
+     }
+
+     public function sendPush(array $data) {
+
+         if (static::$fp == null) {
+             $this->openSocket();
+         }
+
+
+
+         $data['sound'] = 'default';
          $body['aps'] = $data;
+
 
          $payload = json_encode($body);
          $msg = chr(0) . pack('n', 32) . pack('H*', $this->deviceToken) . pack('n', strlen($payload)) . $payload;
-         $result = fwrite($fp, $msg, strlen($msg));
 
+         $result = fwrite(static::$fp, $msg, strlen($msg));
          if ($result) {
              $message =  true;
          } else {
              $message =  false;
          }
-         fclose($fp);
+
 
          return $message;
      }
