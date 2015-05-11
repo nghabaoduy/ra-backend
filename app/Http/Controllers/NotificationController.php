@@ -121,14 +121,13 @@ class NotificationController extends Controller {
         $msg = [];
         $message = $request->get('message');
 
-
         if ($request->has('group_sharing') && $request->get('group_sharing') == 'share') {
 
             $groupId = $message['group_id'];
 
             $group = Group::with('creator','members', 'creator.profileImage')->where('id', $groupId)->first();
 
-            if ($group && $group->switch2 === true) {
+            if ($group && boolval($group->switch2) == true) {
                 foreach ($group->members as $member) {
                     $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->get();
                     foreach ($allInstallation as $installation) {
@@ -159,7 +158,7 @@ class NotificationController extends Controller {
 
         $all = Installation::where('app_identifier', $appIdentifier)->where('user_id', $userId)->get();
             //dd($all);
-        $msg = [];
+
 
         foreach ($all as $installation) {
             if ($installation->device_token) {
