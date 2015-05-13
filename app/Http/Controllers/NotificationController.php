@@ -221,6 +221,7 @@ class NotificationController extends Controller {
 
                     if ($installation->device_token && $installation->user_id != $userId) {
 
+                        //$pushList[] = ['installation' => $installation, 'group' => $group];
                         $pushList[] = ['installation' => $installation, 'group' => $group];
                     }
                 }
@@ -246,7 +247,7 @@ class NotificationController extends Controller {
                 $msg[]= "Failed send to members". $myPush['installation']->id ;
             }
         }
-  
+
 
         NotificationService::closeSocket();
 
