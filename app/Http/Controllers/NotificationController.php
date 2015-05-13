@@ -246,7 +246,7 @@ class NotificationController extends Controller {
                 $msg[]= "Failed send to members". $myPush['installation']->id ;
             }
         }
-
+  
 
         NotificationService::closeSocket();
 
