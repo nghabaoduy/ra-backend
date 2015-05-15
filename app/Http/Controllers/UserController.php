@@ -180,13 +180,13 @@ class UserController extends Controller {
     }
 
     public function forgotPassword(ForgotPasswordRequest $request) {
-        $email = $request->get('email');
+        $username = $request->get('username');
 
-        $user = User::where('email', $email)->first();
+        $user = User::where('username', $username)->first();
 
         if (!$user) {
             //error
-            return response('user not found', 404);
+            return response(json_encode(['message' => 'user not found']), 404);
         }
 
         $newPassword = $this->quickRandom(6);
@@ -194,12 +194,12 @@ class UserController extends Controller {
         $user->password = bcrypt($newPassword);
         $user->update();
 
-        Mail::send('emails.forgotPassword', ['password' => $newPassword], function($message) use ($email)
+        Mail::send('emails.forgotPassword', ['password' => $newPassword], function($message) use ($user)
         {
-            $message->to($email);
+            $message->to($user->email);
         });
 
-        return response();
+        return response($user);
     }
 	/**
 	 * Remove the specified resource from storage.

@@ -23,7 +23,7 @@ class ForgotPasswordRequest extends Request {
 	{
 		return [
 			//
-            'email' => 'required|email'
+            'username' => 'required'
 		];
 	}
 
