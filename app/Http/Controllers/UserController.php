@@ -199,7 +199,7 @@ class UserController extends Controller {
             $message->to($user->email);
         });
 
-        return response($user);
+        return response();
     }
 	/**
 	 * Remove the specified resource from storage.
