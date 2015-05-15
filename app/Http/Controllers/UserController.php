@@ -14,7 +14,8 @@ use App\Http\Requests\ChangePasswordRequest;
 use DateTime;
 use Illuminate\Support\Facades\File;
 use App\FileAsset;
-
+use App\Http\Requests\ForgotPasswordRequest;
+use Illuminate\Support\Facades\Mail;
 class UserController extends Controller {
 
 	/**
@@ -176,6 +177,29 @@ class UserController extends Controller {
         }
 
         return response(null, 204);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request) {
+        $email = $request->get('email');
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            //error
+            return response('user not found', 404);
+        }
+
+        $newPassword = $this->quickRandom(6);
+
+        $user->password = bcrypt($newPassword);
+        $user->update();
+
+        Mail::send('emails.forgotPassword', ['password' => $newPassword], function($message) use ($email)
+        {
+            $message->to($email);
+        });
+
+        return response();
     }
 	/**
 	 * Remove the specified resource from storage.
