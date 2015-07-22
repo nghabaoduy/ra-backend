@@ -23,7 +23,7 @@
              $this->localCert = public_path() . "/Push/" . $appIdentifier . '/' . $this->appCertDev;
          }
          else {
-             $this->localCert = public_path() . "/Push/" . $appIdentifier . '/' . $this->$appCert;
+             $this->localCert = public_path() . "/Push/" . $appIdentifier . '/' . $this->appCert;
          }
          $this->dev = true;
          $this->appIdentifier = $appIdentifier;
@@ -45,7 +45,6 @@
                  $errstr, 60, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx);
 
          } else {
-             dd(static::$fp);
 
              static::$fp = stream_socket_client(
                  'ssl://gateway.push.apple.com:2195', $err,

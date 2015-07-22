@@ -43,11 +43,12 @@ $router->post('/user/{user}/uploadProfile', 'UserController@uploadProfile');
 
 use App\Services\NotificationService;
 $router->get('/testing', function() {
-    $push = new NotificationService('sg.com.hvsolutions.realJamesGoh', '436376f72e66ac3f55499e63952eacd4c7c1b64f3bd7ae09671e0453e3a0b113', true);
+    $push = new NotificationService('sg.com.hvsolutions.realJamesGoh', 'ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3');
 
     //dd($scheduleEvent);
 
     $data = ['alert' => 'abc' , 'pushType' => 'group_tab3', 'group_id' => 1];
+    //dd($data);
     $result = $push->sendPush($data);
     return response(json_encode($data));
 });
