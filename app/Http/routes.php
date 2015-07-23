@@ -41,15 +41,26 @@ $router->post('/auth', 'BasicAuthController@Auth');
 $router->post('/user/{user}/changePassword', 'UserController@changePassword');
 $router->post('/user/{user}/uploadProfile', 'UserController@uploadProfile');
 
-use App\Services\NotificationService;
-$router->get('/testing', function() {
-    $push = new NotificationService('sg.com.hvsolutions.realJamesGoh', 'ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3');
+use Davibennun\LaravelPushNotification\Facades\PushNotification;
+$router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $filesystem) {
+
+    //dd(asset("/Push/sg.com.hvsolutions.realJamesGoh/Push.pem"));
+    $abc = $filesystem->exists(public_path() . "\\Push\\sg.com.hvsolutions.realJamesGoh\\Push.pem");
+    dd($abc);
+    PushNotification::app('sg.com.hvsolutions.realJamesGoh')
+        ->to('ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3')
+        ->send('Hello World, i`m a push message');
+
+
+
+    //$push = new NotificationService('sg.com.hvsolutions.realJamesGoh', 'ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3');
 
     //dd($scheduleEvent);
 
-    $data = ['alert' => 'abc' , 'pushType' => 'group_tab3', 'group_id' => 1];
+    //$data = ['alert' => 'abc' , 'pushType' => 'group_tab3', 'group_id' => 1];
     //dd($data);
-    $result = $push->sendPush($data);
+    //$result = $push->sendPush($data);
+    dd('here');
     return response(json_encode($data));
 });
 

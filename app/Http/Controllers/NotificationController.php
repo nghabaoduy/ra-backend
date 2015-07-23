@@ -92,7 +92,7 @@ class NotificationController extends Controller {
     public function pushAll(SendAllNotificationRequest $request) {
         $appIdentifier = $request->get('app_identifier');
         $isDev = boolval($request->get('is_dev'));
-
+$isDev = false;
         $msg = [];
         $message = $request->get('message');
 //($message);
@@ -122,6 +122,7 @@ class NotificationController extends Controller {
         $appIdentifier = $request->get('app_identifier');
         $userId = $request->get('user_id');
         $isDev = boolval($request->get('is_dev'));
+        $isDev = false;
         $msg = [];
         $message = $request->get('message');
 
@@ -136,7 +137,7 @@ class NotificationController extends Controller {
                     $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->get();
                     foreach ($allInstallation as $installation) {
                         if ($installation->device_token) {
-                            $push = new NotificationService($installation->app_identifier, $installation->device_token, $isDev);
+                            $push = new NotificationService($installation->app_identifier, $installation->device_token);
 
                             $customMessage = [
                                 'alert' => 'My groups - '.$group->title.': New share listing',
@@ -159,10 +160,11 @@ class NotificationController extends Controller {
 
         foreach ($all as $installation) {
             if ($installation->device_token) {
-                $push = new NotificationService($installation->app_identifier, $installation->device_token, $isDev);
+                $push = new NotificationService($installation->app_identifier, $installation->device_token);
                 $result = $push->sendPush($message);
                 if ($result) {
-                    $msg[]= "send to ". $installation->id ;
+                    $msg[]= "send to ". $installation->device_token ;
+                    sleep(1);
                 } else {
                     $msg[]= "Failed send to ". $installation->id ;
                 }
@@ -178,6 +180,7 @@ class NotificationController extends Controller {
         $appIdentifier = $request->get('app_identifier');
         $userId = $request->get('user_id');
         $isDev = boolval($request->get('is_dev'));
+        $isDev = false;
 
         $msg = [];
 
