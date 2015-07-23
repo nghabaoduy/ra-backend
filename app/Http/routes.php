@@ -44,10 +44,10 @@ $router->post('/user/{user}/uploadProfile', 'UserController@uploadProfile');
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $filesystem) {
 
-    //dd(asset("/Push/sg.com.hvsolutions.realJamesGoh/Push.pem"));
-    $abc = $filesystem->exists(public_path() . "\\Push\\sg.com.hvsolutions.realJamesGoh\\Push.pem");
-    dd($abc);
-    PushNotification::app('sg.com.hvsolutions.realJamesGoh')
+    //dd(public_path() . "/Push/sg.com.hvsolutions.realJamesGoh/Push.pem");
+    //$abc = $filesystem->exists(public_path() . "/Push/sg.com.hvsolutions.realJamesGoh/Push.pem");
+    //dd($abc);
+    PushNotification::app('realJamesGoh')
         ->to('ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3')
         ->send('Hello World, i`m a push message');
 

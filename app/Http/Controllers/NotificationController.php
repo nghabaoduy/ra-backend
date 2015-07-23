@@ -12,6 +12,7 @@ use App\Http\Requests\SendAllNotificationRequest;
 use App\Http\Requests\SendToNotificationRequest;
 use App\Services\NotificationCenter;
 use App\GroupParticipation;
+use Davibennun\LaravelPushNotification\Facades\PushNotification;
 
 class NotificationController extends Controller {
 
@@ -104,8 +105,17 @@ $isDev = false;
 
         foreach ($all as $installation) {
             if ($installation->device_token) {
-                $push = new NotificationService($installation->app_identifier, $installation->device_token, $isDev);
-                $result = $push->sendPush($message);
+                $temp = explode(".",$installation->app_identifier);
+
+                $identifier = $temp[count($temp) - 1];
+                $alert = $message["alert"];
+                $newMessage = $message;
+                unset($newMessage["alert"]);
+
+                $content = PushNotification::Message($alert,$newMessage);
+                $result = PushNotification::app($identifier)
+                    ->to($installation->device_token)
+                    ->send($content);
                 if ($result) {
                     $msg[]= "send to ". $installation->id ;
                     sleep(1);
@@ -114,7 +124,6 @@ $isDev = false;
                 }
             }
         }
-        NotificationService::closeSocket();
         return response(json_encode($msg));
     }
 
@@ -137,17 +146,26 @@ $isDev = false;
                     $allInstallation = Installation::where('app_identifier', $appIdentifier)->where('user_id', $member->id)->get();
                     foreach ($allInstallation as $installation) {
                         if ($installation->device_token) {
-                            $push = new NotificationService($installation->app_identifier, $installation->device_token);
+
+
 
                             $customMessage = [
-                                'alert' => 'My groups - '.$group->title.': New share listing',
                                 'pushType' => 'group_tab3',
                                 'group_id' => $groupId
                             ];
-                            $result = $push->sendPush($customMessage);
+
+                            $temp = explode(".",$installation->app_identifier);
+
+                            $identifier = $temp[count($temp) - 1];
+                            $alert = 'My groups - '.$group->title.': New share listing';
+
+                            $content = PushNotification::Message($alert,$customMessage);
+                            $result = PushNotification::app($identifier)
+                                ->to($installation->device_token)
+                                ->send($content);
+
                             if ($result) {
                                 $msg[]= "send to members ". $installation->id ;
-                                sleep(1);
                             } else {
                                 $msg[]= "Failed send to members". $installation->id ;
                             }
@@ -160,18 +178,27 @@ $isDev = false;
 
         foreach ($all as $installation) {
             if ($installation->device_token) {
-                $push = new NotificationService($installation->app_identifier, $installation->device_token);
-                $result = $push->sendPush($message);
+
+
+
+                $temp = explode(".",$installation->app_identifier);
+
+                $identifier = $temp[count($temp) - 1];
+                $alert = $message["alert"];
+                $newMessage = $message;
+                unset($newMessage["alert"]);
+
+                $content = PushNotification::Message($alert,$newMessage);
+                $result = PushNotification::app($identifier)
+                    ->to($installation->device_token)
+                    ->send($content);
                 if ($result) {
                     $msg[]= "send to ". $installation->device_token ;
-                    sleep(1);
                 } else {
                     $msg[]= "Failed send to ". $installation->id ;
                 }
             }
         }
-
-        NotificationService::closeSocket();
         return response(json_encode($msg));
     }
 
@@ -235,14 +262,19 @@ $isDev = false;
         }
 
         foreach ($pushList as $myPush) {
-            $push = new NotificationService($myPush['installation']->app_identifier, $myPush['installation']->device_token, $isDev);
-
             $customMessage = [
-                'alert' => 'My groups - '.$myPush['group']->title.': New share listing',
                 'pushType' => 'group_tab3',
                 'group_id' => $myPush['group']->id
             ];
-            $result = $push->sendPush($customMessage);
+            $temp = explode(".",$myPush['installation']->app_identifier);
+
+            $identifier = $temp[count($temp) - 1];
+            $alert = 'My groups - '.$myPush['group']->title.': New share listing';
+
+            $content = PushNotification::Message($alert,$customMessage);
+            $result = PushNotification::app($identifier)
+                ->to($myPush['installation']->device_token)
+                ->send($content);
             if ($result) {
                 $msg[]= "send to members ". $myPush['installation']->id ;
                 sleep(1);
@@ -251,8 +283,6 @@ $isDev = false;
             }
         }
 
-
-        NotificationService::closeSocket();
 
         return response(json_encode($msg));
     }
