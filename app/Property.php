@@ -69,7 +69,11 @@ class Property extends Model {
         'valuation',
         'vehicle_access',
         'creator_id',
-        'comment'
+        'comment',
+        'expired_at',
+        'expired_notify',
+        'contract_expired_at',
+        'contract_expired_notify'
     ];
 
     public function propertyImage() {
