@@ -42,15 +42,18 @@ $router->post('/user/{user}/changePassword', 'UserController@changePassword');
 $router->post('/user/{user}/uploadProfile', 'UserController@uploadProfile');
 
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
+use App\Property;
+use App\Installation;
+
 $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $filesystem) {
 
     //dd(public_path() . "/Push/sg.com.hvsolutions.realJamesGoh/Push.pem");
     //$abc = $filesystem->exists(public_path() . "/Push/sg.com.hvsolutions.realJamesGoh/Push.pem");
     //dd($abc);
-    PushNotification::app('realJamesGoh')
-        ->to('ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3')
-        ->send('Hello World, i`m a push message');
-
+//    PushNotification::app('realJamesGoh')
+//        ->to('ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3')
+//        ->send('Hello World, i`m a push message');
+//
 
 
     //$push = new NotificationService('sg.com.hvsolutions.realJamesGoh', 'ecc87ee370ebc1aabc9301ad670e4ada4d34a4424216f2431f11d893a0fa3ec3');
@@ -60,8 +63,42 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //$data = ['alert' => 'abc' , 'pushType' => 'group_tab3', 'group_id' => 1];
     //dd($data);
     //$result = $push->sendPush($data);
-    dd('here');
-    return response(json_encode($data));
+//    dd('here');
+    $properties = Property::where('submit', 'YES')->where("expired_at", ">=", Carbon\Carbon::now())->get(["agent_id"]);
+
+    $agentList = [];
+
+    foreach ($properties as $property => $propData) {
+        $agentList[] = $propData["agent_id"];
+    }
+
+    $installations = Installation::whereIn("user_id", $agentList)->get();
+
+    $msg = [];
+    foreach ($installations as $installation) {
+        if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+            $temp = explode(".",$installation->app_identifier);
+
+            $identifier = $temp[count($temp) - 1];
+            $alert = "hahahah";
+
+            $content = PushNotification::Message($alert,[
+                'badge' => 1,
+            ]);
+            $result = PushNotification::app($identifier)
+                ->to($installation->device_token)
+                ->send($content);
+            if ($result) {
+                $msg[]= "send to ". $installation->id ;
+                sleep(1);
+            } else {
+                $msg[]= "Failed send to ". $installation->id ;
+            }
+        }
+    }
+
+
+    return response(json_encode($msg));
 });
 
 

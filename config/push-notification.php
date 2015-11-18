@@ -2,9 +2,15 @@
 
 return array(
 
-    'realJamesGoh' => array(
+    'realJamesGohD' => array(
         'environment' =>'production',
         'certificate' => public_path() . "/Push/sg.com.hvsolutions.realJamesGoh/Push.pem",
+        'passPhrase'  => env('NOTIFICATION_KEY'),
+        'service'     =>'apns'
+    ),
+    'realJamesGoh' => array(
+        'environment' =>'development',
+        'certificate' => public_path() . "/Push/sg.com.hvsolutions.realJamesGoh/PushDev.pem",
         'passPhrase'  => env('NOTIFICATION_KEY'),
         'service'     =>'apns'
     ),
