@@ -64,38 +64,67 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //dd($data);
     //$result = $push->sendPush($data);
 //    dd('here');
-    $properties = Property::where('submit', 'YES')->where("expired_at", ">=", Carbon\Carbon::now())->get(["agent_id"]);
+    $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon\Carbon::now())->where('expired_notify', 0)->get(["id", "agent_id", "project"]);
 
     $agentList = [];
+    $propProjectList = [];
+    $propIdList = [];
 
     foreach ($properties as $property => $propData) {
         $agentList[] = $propData["agent_id"];
-    }
+        $propProjectList[] = $propData["project"];
+        $propIdList[] = $propData["id"];
+     }
 
     $installations = Installation::whereIn("user_id", $agentList)->get();
 
     $msg = [];
+
     foreach ($installations as $installation) {
-        if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
-            $temp = explode(".",$installation->app_identifier);
+        if ($installation->device_token) {
+
+            $propId = "N/A";
+            $propProject = "N/A";
+
+            $index = 0;
+            foreach ($agentList as $agent) {
+                if ($agent == $installation->user_id) {
+                    $propId = $propIdList[$index];
+                    $propProject = $propProjectList[$index];
+                    break;
+                }
+                $index++;
+            }
+
+            $temp = explode(".", $installation->app_identifier);
 
             $identifier = $temp[count($temp) - 1];
-            $alert = "hahahah";
 
-            $content = PushNotification::Message($alert,[
+            if ($propProject == "N/A") {
+                $alert = 'Property id:'.$propId.' has expired. Do you want to market it again?';
+            } else {
+                $alert = 'Property "'.$propProject.'" has expired. Do you want to market it again?';
+            }
+
+
+            $content = PushNotification::Message($alert, [
                 'badge' => 1,
+                'prop_id' => $propId,
+                'alert_type' => 'expired_at'
             ]);
             $result = PushNotification::app($identifier)
                 ->to($installation->device_token)
                 ->send($content);
             if ($result) {
-                $msg[]= "send to ". $installation->id ;
+                $msg[] = "send to " . $installation->id;
                 sleep(1);
             } else {
-                $msg[]= "Failed send to ". $installation->id ;
+                $msg[] = "Failed send to " . $installation->id;
             }
         }
     }
+
+    DB::table('property')->whereIn("id", $propIdList)->update(array('submit' => 'NO'));
 
 
     return response(json_encode($msg));
