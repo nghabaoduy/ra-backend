@@ -48,6 +48,8 @@ class Kernel extends ConsoleKernel {
                 $propIdList[] = $propData["id"];
             }
 
+            DB::table('property')->whereIn("id", $propIdList)->update(array('submit' => 'NO'));
+
             $installations = Installation::whereIn("user_id", $agentList)->get();
 
             $msg = [];
@@ -82,7 +84,7 @@ class Kernel extends ConsoleKernel {
                     $content = PushNotification::Message($alert, [
                         'badge' => 1,
                         'prop_id' => $propId,
-                        'alert_type' => 'expired_at'
+                        'pushType' => 'expired_at'
                     ]);
                     $result = PushNotification::app($identifier)
                         ->to($installation->device_token)
@@ -96,7 +98,7 @@ class Kernel extends ConsoleKernel {
                 }
             }
 
-            DB::table('property')->whereIn("id", $propIdList)->update(array('submit' => 'NO'));
+
 
         })->everyFiveMinutes();
 	}
