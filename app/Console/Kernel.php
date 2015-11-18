@@ -7,7 +7,6 @@ use App\Property;
 use Illuminate\Support\Facades\DB;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use App\Installation;
-use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel {
 
