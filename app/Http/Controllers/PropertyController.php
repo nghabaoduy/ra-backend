@@ -16,6 +16,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use App\PropertyImage;
 use App\GroupSharing;
 use DateTime;
+use Carbon\Carbon;
 
 class PropertyController extends Controller {
 
@@ -422,9 +423,27 @@ class PropertyController extends Controller {
 
         //dd($request->all());
         //$property = Property::find($id);
+
+        $isSubmit = false;
+
+
+
+
         $property = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->first();
 
+
+
         $data = $request->all();
+
+        if ($property->submit == "NO" && $data["submit"] == "YES") {
+            $isSubmit = true;
+        }
+
+
+        if ($isSubmit === true) {
+            $data["expired_at"] = Carbon::now()->addMinute(2)->toDateTimeString();
+        }
+
         $property->update($data);
 
         return response($property);
