@@ -81,7 +81,7 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     $msg = [];
 
     foreach ($installations as $installation) {
-        if ($installation->device_token) {
+        if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
 
             $propId = "N/A";
             $propProject = "N/A";
