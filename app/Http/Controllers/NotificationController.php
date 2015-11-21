@@ -112,7 +112,9 @@ $isDev = false;
                 $newMessage = $message;
                 unset($newMessage["alert"]);
 
-                $content = PushNotification::Message($alert,$newMessage);
+                $customData = ['badge' =>1,  'custom' => $newMessage];
+
+                $content = PushNotification::Message($alert,$customData);
                 $result = PushNotification::app($identifier)
                     ->to($installation->device_token)
                     ->send($content);
@@ -154,12 +156,14 @@ $isDev = false;
                                 'group_id' => $groupId
                             ];
 
+                            $customData = ['badge' =>1,  'custom' => $customMessage];
+
                             $temp = explode(".",$installation->app_identifier);
 
                             $identifier = $temp[count($temp) - 1];
                             $alert = 'My groups - '.$group->title.': New share listing';
 
-                            $content = PushNotification::Message($alert,$customMessage);
+                            $content = PushNotification::Message($alert,$customData);
                             $result = PushNotification::app($identifier)
                                 ->to($installation->device_token)
                                 ->send($content);
@@ -188,7 +192,10 @@ $isDev = false;
                 $newMessage = $message;
                 unset($newMessage["alert"]);
 
-                $content = PushNotification::Message($alert,$newMessage);
+                $customData = ['badge' =>1,  'custom' => $newMessage];
+
+
+                $content = PushNotification::Message($alert,$customData);
                 $result = PushNotification::app($identifier)
                     ->to($installation->device_token)
                     ->send($content);
@@ -266,12 +273,14 @@ $isDev = false;
                 'pushType' => 'group_tab3',
                 'group_id' => $myPush['group']->id
             ];
+
+            $customData = ['badge' =>1,  'custom' => $customMessage];
             $temp = explode(".",$myPush['installation']->app_identifier);
 
             $identifier = $temp[count($temp) - 1];
             $alert = 'My groups - '.$myPush['group']->title.': New share listing';
 
-            $content = PushNotification::Message($alert,$customMessage);
+            $content = PushNotification::Message($alert,$customData);
             $result = PushNotification::app($identifier)
                 ->to($myPush['installation']->device_token)
                 ->send($content);

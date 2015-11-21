@@ -67,6 +67,22 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //dd($data);
     //$result = $push->sendPush($data);
 //    dd('here');
+
+    $message = PushNotification::Message('Message Text',array(
+        'badge' => 1,
+        'custom' => array("prop_id"=>1085,"pushType"=>"expired_at")
+    ));
+
+
+    $result = PushNotification::app("realJamesGoh")
+        ->to("cf67fc4a151b47b33f35e48096d9f1cdc7a686a14119f8ca38ab1e353a5a5335")
+        ->send($message);
+
+
+
+
+    return;
+
     $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
     $msg = [];
     if (count($properties) > 0) {

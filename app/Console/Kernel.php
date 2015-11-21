@@ -80,8 +80,7 @@ class Kernel extends ConsoleKernel {
 
                         $content = PushNotification::Message($alert, [
                             'badge' => 1,
-                            'prop_id' => $propId,
-                            'pushType' => 'expired_at'
+                            'custom' => array("prop_id"=>$propId,"pushType"=>"expired_at")
                         ]);
                         $result = PushNotification::app($identifier)
                             ->to($installation->device_token)
@@ -151,8 +150,7 @@ class Kernel extends ConsoleKernel {
 
                         $content = PushNotification::Message($alert, [
                             'badge' => 1,
-                            'prop_id' => $propId,
-                            'pushType' => 'expired_at_3days'
+                            'custom' => array("prop_id"=>$propId,"pushType"=>"expired_at_3days")
                         ]);
                         $result = PushNotification::app($identifier)
                             ->to($installation->device_token)
@@ -222,8 +220,7 @@ class Kernel extends ConsoleKernel {
 
                         $content = PushNotification::Message($alert, [
                             'badge' => 1,
-                            'prop_id' => $propId,
-                            'alert_type' => 'contract_expired'
+                            'custom' => array("prop_id"=>$propId,"pushType"=>"contract_expired")
                         ]);
                         $result = PushNotification::app($identifier)
                             ->to($installation->device_token)
