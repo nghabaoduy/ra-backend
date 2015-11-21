@@ -72,6 +72,7 @@ class Property extends Model {
         'comment',
         'expired_at',
         'expired_notify',
+        'expired_notify_3days',
         'contract_expired_at',
         'contract_expired_notify'
     ];

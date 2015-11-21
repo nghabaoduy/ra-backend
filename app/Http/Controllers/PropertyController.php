@@ -441,7 +441,8 @@ class PropertyController extends Controller {
 
 
         if ($isSubmit === true) {
-            $data["expired_at"] = Carbon::now()->addMinute(2)->toDateTimeString();
+            $data["expired_at"] = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+            $data["expired_at_notify"] = true;
         }
 
         $property->update($data);

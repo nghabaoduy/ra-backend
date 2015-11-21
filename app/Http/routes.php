@@ -64,17 +64,27 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //dd($data);
     //$result = $push->sendPush($data);
 //    dd('here');
-    $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon\Carbon::now())->where('expired_notify', 0)->get(["id", "agent_id", "project"]);
+    $properties = Property::where('submit', 'NO')->where('contract_expired_notify', true)->where("contract_expired_at", "<=", Carbon\Carbon::now()->toDateTimeString())->get(["id", "agent_id", "project"]);
+
+    if (count($properties) == 0)
+        return;
+
+
+
 
     $agentList = [];
     $propProjectList = [];
     $propIdList = [];
 
+
     foreach ($properties as $property => $propData) {
         $agentList[] = $propData["agent_id"];
         $propProjectList[] = $propData["project"];
         $propIdList[] = $propData["id"];
-     }
+    }
+
+    DB::table('property')->whereIn("id", $propIdList)->update(array('submit' => 'NO' , 'contract_expired_notify' => false));
+
 
     $installations = Installation::whereIn("user_id", $agentList)->get();
 
@@ -101,9 +111,9 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
             $identifier = $temp[count($temp) - 1];
 
             if ($propProject == "N/A") {
-                $alert = 'Property id:'.$propId.' has expired. Do you want to market it again?';
+                $alert = 'Contract of Property id:'.$propId.' has expired. Do you want to extend it?';
             } else {
-                $alert = 'Property "'.$propProject.'" has expired. Do you want to market it again?';
+                $alert = 'Contract of property "'.$propProject.'" has expired. Do you want to extend it?';
             }
 
 
@@ -124,7 +134,6 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
         }
     }
 
-    DB::table('property')->whereIn("id", $propIdList)->update(array('submit' => 'NO'));
 
 
     return response(json_encode($msg));
