@@ -64,8 +64,10 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //dd($data);
     //$result = $push->sendPush($data);
 //    dd('here');
-    $properties = Property::where('submit', 'NO')->where('contract_expired_notify', true)->where("contract_expired_at", "<=", Carbon\Carbon::now()->toDateTimeString())->get(["id", "agent_id", "project"]);
+    $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon\Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
 
+
+    dd($properties);
     if (count($properties) == 0)
         return;
 

@@ -101,7 +101,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function(){
             // expired at 3 days
-            $properties = Property::where('submit', 'YES')->where("expired_at", ">=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 0)->get(["id", "agent_id", "project", "expired_at"]);
+            $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
 
             if (count($properties) == 0) {
                 return;
