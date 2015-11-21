@@ -223,7 +223,7 @@ class Kernel extends ConsoleKernel {
                         $content = PushNotification::Message($alert, [
                             'badge' => 1,
                             'prop_id' => $propId,
-                            'alert_type' => 'expired_at'
+                            'alert_type' => 'contract_expired'
                         ]);
                         $result = PushNotification::app($identifier)
                             ->to($installation->device_token)
