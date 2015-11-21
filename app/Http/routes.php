@@ -44,6 +44,7 @@ $router->post('/user/{user}/uploadProfile', 'UserController@uploadProfile');
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use App\Property;
 use App\Installation;
+use Carbon\Carbon;
 
 $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $filesystem) {
 
@@ -64,74 +65,70 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //dd($data);
     //$result = $push->sendPush($data);
 //    dd('here');
-    $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon\Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
-
-
-    dd($properties);
-    if (count($properties) == 0)
-        return;
-
-
-
-
-    $agentList = [];
-    $propProjectList = [];
-    $propIdList = [];
-
-
-    foreach ($properties as $property => $propData) {
-        $agentList[] = $propData["agent_id"];
-        $propProjectList[] = $propData["project"];
-        $propIdList[] = $propData["id"];
-    }
-
-    DB::table('property')->whereIn("id", $propIdList)->update(array('submit' => 'NO' , 'contract_expired_notify' => false));
-
-
-    $installations = Installation::whereIn("user_id", $agentList)->get();
-
+    $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
     $msg = [];
+    if (count($properties) > 0) {
+        $agentList = [];
+        $propProjectList = [];
+        $propIdList = [];
+        $expiredAtList = [];
 
-    foreach ($installations as $installation) {
-        if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+        foreach ($properties as $property => $propData) {
+            $agentList[] = $propData["agent_id"];
+            $propProjectList[] = $propData["project"];
+            $propIdList[] = $propData["id"];
+            $expiredAtList[] = $propData["expired_at"];
+        }
 
-            $propId = "N/A";
-            $propProject = "N/A";
+        DB::table('property')->whereIn("id", $propIdList)->update(array('expired_notify' => 0));
 
-            $index = 0;
-            foreach ($agentList as $agent) {
-                if ($agent == $installation->user_id) {
-                    $propId = $propIdList[$index];
-                    $propProject = $propProjectList[$index];
-                    break;
+        $installations = Installation::whereIn("user_id", $agentList)->get();
+
+
+
+        foreach ($installations as $installation) {
+            if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+
+                $propId = "N/A";
+                $propProject = "N/A";
+                $expiredDate = "N/A";
+
+                $index = 0;
+                foreach ($agentList as $agent) {
+                    if ($agent == $installation->user_id) {
+                        $propId = $propIdList[$index];
+                        $propProject = $propProjectList[$index];
+                        $expiredDate = $expiredAtList[$index];
+                        break;
+                    }
+                    $index++;
                 }
-                $index++;
-            }
 
-            $temp = explode(".", $installation->app_identifier);
+                $temp = explode(".", $installation->app_identifier);
 
-            $identifier = $temp[count($temp) - 1];
+                $identifier = $temp[count($temp) - 1];
 
-            if ($propProject == "N/A") {
-                $alert = 'Contract of Property id:'.$propId.' has expired. Do you want to extend it?';
-            } else {
-                $alert = 'Contract of property "'.$propProject.'" has expired. Do you want to extend it?';
-            }
+                if ($propProject == "N/A") {
+                    $alert = 'Property id:'.$propId.' will be expired on '.$expiredDate.'.';
+                } else {
+                    $alert = 'Property "'.$propProject.'" will be expired on '.$expiredDate.'.';
+                }
 
 
-            $content = PushNotification::Message($alert, [
-                'badge' => 1,
-                'prop_id' => $propId,
-                'alert_type' => 'expired_at'
-            ]);
-            $result = PushNotification::app($identifier)
-                ->to($installation->device_token)
-                ->send($content);
-            if ($result) {
-                $msg[] = "send to " . $installation->id;
-                sleep(1);
-            } else {
-                $msg[] = "Failed send to " . $installation->id;
+                $content = PushNotification::Message($alert, [
+                    'badge' => 1,
+                    'prop_id' => $propId,
+                    'pushType' => 'expired_at_3days'
+                ]);
+                $result = PushNotification::app($identifier)
+                    ->to($installation->device_token)
+                    ->send($content);
+                if ($result) {
+                    $msg[] = "send to " . $installation->id;
+                    sleep(1);
+                } else {
+                    $msg[] = "Failed send to " . $installation->id;
+                }
             }
         }
     }

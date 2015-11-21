@@ -100,7 +100,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function(){
             // expired at 3 days
             $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
-
+            $msg = [];
             if (count($properties) > 0) {
                 $agentList = [];
                 $propProjectList = [];
@@ -114,11 +114,11 @@ class Kernel extends ConsoleKernel {
                     $expiredAtList[] = $propData["expired_at"];
                 }
 
-                DB::table('property')->whereIn("id", $propIdList)->update(array('expired_notify' => yes));
+                DB::table('property')->whereIn("id", $propIdList)->update(array('expired_notify' => 0));
 
                 $installations = Installation::whereIn("user_id", $agentList)->get();
 
-                $msg = [];
+
 
                 foreach ($installations as $installation) {
                     if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
