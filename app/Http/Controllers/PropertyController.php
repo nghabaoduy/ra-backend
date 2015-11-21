@@ -450,6 +450,22 @@ class PropertyController extends Controller {
         return response($property);
 	}
 
+    public function extendEnlist($id, Request $request) {
+        $property = Property::find($id);
+
+        if (!$property) {
+            return response(json_encode(['message'=>'property not found']), 404);
+        }
+
+        $property->expired_at = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+        $property->expired_notify = 1;
+        $property->submit = "YES";
+
+        $property->save();
+
+        return response($property);
+    }
+
     public function  upload($id, Request $request, Cloud $cloud) {
 
         $property = Property::find($id);

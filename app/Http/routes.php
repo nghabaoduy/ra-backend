@@ -20,6 +20,8 @@ $router->resource('user', 'UserController');
 
 
 $router->post('/property/{property}/upload', 'PropertyController@upload');
+$router->post('/property/{property}/extendEnlist', 'PropertyController@extendEnlist');
+
 $router->delete('/property/{property}/removeImages', 'PropertyController@removeAllImages');
 $router->resource('schedule', 'ScheduleEventController');
 $router->get('/projectList', 'PropertyController@getProjectList');
@@ -114,17 +116,17 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
                     $alert = 'Property "'.$propProject.'" will be expired on '.$expiredDate.'.';
                 }
 
-
-                $content = PushNotification::Message($alert, [
-                    'badge' => 1,
+                $data = array('badge' => 1,
                     'prop_id' => $propId,
-                    'pushType' => 'expired_at_3days'
-                ]);
+                    'pushType' => 'expired_at_3days',) ;
+
+
+                $content = PushNotification::Message($alert, $data);
                 $result = PushNotification::app($identifier)
                     ->to($installation->device_token)
-                    ->send($content);
+                    ->send($alert, $data);
                 if ($result) {
-                    $msg[] = "send to " . $installation->id;
+                    $msg[] = $data;
                     sleep(1);
                 } else {
                     $msg[] = "Failed send to " . $installation->id;
