@@ -68,20 +68,72 @@ $router->get('/testing', function(\Illuminate\Contracts\Filesystem\Filesystem $f
     //$result = $push->sendPush($data);
 //    dd('here');
 
-    $message = PushNotification::Message('Message Text',array(
-        'badge' => 1,
-        'custom' => array("prop_id"=>1085,"pushType"=>"expired_at")
-    ));
+    $properties = Property::where('submit', 'YES')->where('auto_extend_expired', 1)->where("expired_at", "<=", Carbon::now()->toDateTimeString())->get(["id", "agent_id", "project"]);
+
+    if (count($properties) > 0) {
+        $agentList = [];
+        $propProjectList = [];
+        $propIdList = [];
+
+        foreach ($properties as $property => $propData) {
+            $agentList[] = $propData["agent_id"];
+            $propProjectList[] = $propData["project"];
+            $propIdList[] = $propData["id"];
+        }
+        DB::table('property')->whereIn("id", $propIdList)->update(array('expired_at' => Carbon::now()->addDay(30)->toDateTimeString()));
 
 
-    $result = PushNotification::app("realJamesGoh")
-        ->to("cf67fc4a151b47b33f35e48096d9f1cdc7a686a14119f8ca38ab1e353a5a5335")
-        ->send($message);
+        $installations = Installation::whereIn("user_id", $agentList)->get();
+
+        $msg = [];
+
+        foreach ($installations as $installation) {
+            if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+
+                $propId = "N/A";
+                $propProject = "N/A";
+
+                $index = 0;
+                foreach ($agentList as $agent) {
+                    if ($agent == $installation->user_id) {
+                        $propId = $propIdList[$index];
+                        $propProject = $propProjectList[$index];
+                        break;
+                    }
+                    $index++;
+                }
+
+                $temp = explode(".", $installation->app_identifier);
+
+                $identifier = $temp[count($temp) - 1];
+
+                if ($propProject == "N/A") {
+                    $alert = 'Property id:'.$propId.' has been automatically extended 30 days.';
+                } else {
+                    $alert = 'Property "'.$propProject.'" has been automatically extended 30 days.';
+                }
 
 
+                $content = PushNotification::Message($alert, [
+                    'badge' => 1,
+                    'custom' => array("prop_id"=>$propId,"pushType"=>"expired_at")
+                ]);
+                $result = PushNotification::app($identifier)
+                    ->to($installation->device_token)
+                    ->send($content);
+                if ($result) {
+                    $msg[] = "send to " . $installation->id;
+                    sleep(1);
+                } else {
+                    $msg[] = "Failed send to " . $installation->id;
+                }
+            }
+        }
 
+        return json_encode($msg);
+    }
 
-    return;
+    return json_encode([]);;
 
     $properties = Property::where('submit', 'YES')->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
     $msg = [];

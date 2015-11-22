@@ -74,7 +74,8 @@ class Property extends Model {
         'expired_notify',
         'expired_notify_3days',
         'contract_expired_at',
-        'contract_expired_notify'
+        'contract_expired_notify',
+        'auto_extend_expired'
     ];
 
     public function propertyImage() {
