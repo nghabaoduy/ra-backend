@@ -137,9 +137,9 @@ class Kernel extends ConsoleKernel {
                         $identifier = $temp[count($temp) - 1];
 
                         if ($propProject == "N/A") {
-                            $alert = 'Property id:'.$propId.' has expired. Do you want to market it again?';
+                            $alert = 'Property id:'.$propId.' has expired.';
                         } else {
-                            $alert = 'Property "'.$propProject.'" has expired. Do you want to market it again?';
+                            $alert = 'Property "'.$propProject.'" has expired.';
                         }
 
 
