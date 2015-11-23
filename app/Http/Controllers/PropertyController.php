@@ -441,7 +441,9 @@ class PropertyController extends Controller {
 
 
         if ($isSubmit === true) {
-            $data["expired_at"] = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+            //$data["expired_at"] = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+            $data["expired_at"] = Carbon::now()->addMinute(12)->toDateTimeString();
+
             $data["expired_notify"] = 1;
         }
 
@@ -457,7 +459,8 @@ class PropertyController extends Controller {
             return response(json_encode(['message'=>'property not found']), 404);
         }
 
-        $property->expired_at = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+        //$property->expired_at = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+        $property->expired_at = Carbon::now()->addMinute(12)->toDateTimeString();
         $property->expired_notify = 1;
         $property->submit = "YES";
 
