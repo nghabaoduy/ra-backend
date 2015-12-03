@@ -427,7 +427,7 @@ class PropertyController extends Controller {
         $isSubmit = false;
 
 
-
+        $isChangeContract = false;
 
         $property = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->first();
 
@@ -445,6 +445,12 @@ class PropertyController extends Controller {
             $data["expired_at"] = Carbon::now()->addDay(30)->toDateTimeString();
 
             $data["expired_notify"] = 1;
+        }
+
+
+
+        if ($data["contract_expired_at"] != $property->contract_expired_at) {
+            $data["contract_expired_notify"] = 1;
         }
 
         $property->update($data);

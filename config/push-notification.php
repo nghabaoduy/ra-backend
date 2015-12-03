@@ -92,6 +92,12 @@ return array(
         'passPhrase'  => env('NOTIFICATION_KEY'),
         'service'     =>'apns'
     ),
+    'real-agent' => array(
+        'environment' =>'production',
+        'certificate' => public_path() . "/Push/sg.com.hvsolutions.real-agent/Push.pem",
+        'passPhrase'  => env('NOTIFICATION_KEY'),
+        'service'     =>'apns'
+    ),
     'appNameAndroid' => array(
         'environment' =>'production',
         'apiKey'      =>'yourAPIKey',
