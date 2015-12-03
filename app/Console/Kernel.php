@@ -51,7 +51,7 @@ class Kernel extends ConsoleKernel {
                 $msg = [];
 
                 foreach ($installations as $installation) {
-                    if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+                    if ($installation->device_token) {// && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
 
                         $propId = "N/A";
                         $propProject = "N/A";
@@ -117,7 +117,7 @@ class Kernel extends ConsoleKernel {
                 $msg = [];
 
                 foreach ($installations as $installation) {
-                    if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+                    if ($installation->device_token) {// && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
 
                         $propId = "N/A";
                         $propProject = "N/A";
@@ -163,9 +163,9 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function(){
             // expired at 3 days
-            //$properties = Property::where('submit', 'YES')->where('auto_extend_expired', 0)->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
+            $properties = Property::where('submit', 'YES')->where('auto_extend_expired', 0)->where("expired_at", "<=", Carbon::now()->addDay(3)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
 
-            $properties = Property::where('submit', 'YES')->where('auto_extend_expired', 0)->where("expired_at", "<=", Carbon::now()->addMinute(10)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
+            //$properties = Property::where('submit', 'YES')->where('auto_extend_expired', 0)->where("expired_at", "<=", Carbon::now()->addMinute(10)->toDateTimeString())->where('expired_notify', 1)->get(["id", "agent_id", "project", "expired_at"]);
             $msg = [];
             if (count($properties) > 0) {
                 $agentList = [];
@@ -187,7 +187,7 @@ class Kernel extends ConsoleKernel {
 
 
                 foreach ($installations as $installation) {
-                    if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+                    if ($installation->device_token) {// && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
 
                         $propId = "N/A";
                         $propProject = "N/A";
@@ -259,7 +259,7 @@ class Kernel extends ConsoleKernel {
                 $msg = [];
 
                 foreach ($installations as $installation) {
-                    if ($installation->device_token && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
+                    if ($installation->device_token) {// && $installation->app_identifier == "sg.com.hvsolutions.realJamesGoh") {
 
                         $propId = "N/A";
                         $propProject = "N/A";
