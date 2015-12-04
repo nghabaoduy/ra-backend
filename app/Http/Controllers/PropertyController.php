@@ -424,10 +424,10 @@ class PropertyController extends Controller {
         //dd($request->all());
         //$property = Property::find($id);
 
-        $isSubmit = false;
-
-
-        $isChangeContract = false;
+//        $isSubmit = false;
+//
+//
+//        $isChangeContract = false;
 
         $property = Property::with(['propertyImage', 'agent', 'creator', 'propertyImages', 'agent.profileImage', 'creator.profileImage'])->where('id', $id)->first();
 
@@ -435,21 +435,22 @@ class PropertyController extends Controller {
 
         $data = $request->all();
 
-        if ($property->submit == "NO" && $data["submit"] == "YES") {
-            $isSubmit = true;
-        }
+        if (array_key_exists("submit", $data) && $property->submit == "NO" && $data["submit"] == "YES") {
 
-
-        if ($isSubmit === true) {
-            //$data["expired_at"] = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
             $data["expired_at"] = Carbon::now()->addDay(30)->toDateTimeString();
 
             $data["expired_notify"] = 1;
         }
 
+//
+//        if ($isSubmit === true) {
+//            //$data["expired_at"] = Carbon::now()->addDay(3)->addMinute(2)->toDateTimeString();
+//
+//        }
 
 
-        if ($data["contract_expired_at"] != $property->contract_expired_at) {
+
+        if (array_key_exists("contract_expired_at", $data)  && $data["contract_expired_at"] != $property->contract_expired_at) {
             $data["contract_expired_notify"] = 1;
         }
 
