@@ -38,7 +38,12 @@ class GroupParticipationController extends Controller {
 		//
         $group = Group::with('creator','members', 'creator.profileImage')->where('id', $id)->first();
         if (!$group)
-            return response(json_encode(['message' => 'group not found']));
+            return response(json_encode(['message' => 'group not found']), 404);
+
+
+        $existParticipant = GroupParticipation::where('user_id', $request->get('user_id'))->where('group_id', $id)->first();
+        if ($existParticipant)
+            return response(json_encode(['message' => 'participant is exist']),400);
 
 
         $requestData = [
